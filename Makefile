@@ -13,7 +13,6 @@ FILES=\
  PackageSearch.ycp \
  README \
  SearchClient.pm \
- Simple.pm \
  yast2.desktop \
  ymp.desktop \
  ymu.desktop
