@@ -14,6 +14,10 @@ License:			GNU General Public License (GPL)
 BuildRoot:		%{_tmppath}/build-%{name}-%{version}
 BuildArch:		noarch
 Requires:		yast2-packager perl-XML-Simple kdebase3
+# LWP::Simple, Net::HTTP
+Requires:		perl-libwww-perl
+# kwriteconfig
+BuildRequires:		kdebase3
 
 %description
 YaST2 MetaPackage Parser.
@@ -69,11 +73,17 @@ KRC=%{kdeprefix}/share/config/konquerorrc
 %doc README
 %{kdeprefix}/share/mimelnk/text/ym?.desktop
 %{kdeprefix}/share/applnk/.hidden/yast2.desktop
+%dir %{_datadir}/YaST2
+%dir %{_datadir}/YaST2/modules
 %{_datadir}/YaST2/modules/MetaPackageParser.pm
 %{_datadir}/YaST2/modules/SearchClient.pm
+%dir %{_datadir}/YaST2/clients
 %{_datadir}/YaST2/clients/*.ycp
 
 %changelog
+* Thu May 09 2007 Martin Vidner <mvidner@suse.cz>
+- autobuild adjustments
+
 * Sat Apr 21 2007 Pascal Bleser <guru@unixtech.be> 0.0-0
 - new package
 
