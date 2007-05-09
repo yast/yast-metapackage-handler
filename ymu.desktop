@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment=Yast Meta Package URI
+Hidden=false
+Icon=YaST
+MimeType=text/ymu
+Patterns=*.ymu
+Type=MimeType

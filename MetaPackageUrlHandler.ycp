@@ -1,0 +1,9 @@
+{
+	//Allows embedding just the URL to the metapackage in the web page, instead of the entire package.
+
+	list<string> args = (list<string>)WFM::Args();
+	string urlurl = args[0]:"";
+	string url = (string)SCR::Read(.target.string,urlurl);
+	y2milestone("URL: " + url);
+	WFM::call("MetaPackageHandler",[url]);
+}

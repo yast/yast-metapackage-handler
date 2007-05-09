@@ -1,0 +1,166 @@
+ {
+	textdomain "MetaPackageHandler";
+
+	import "Popup";
+	include "packager/inst_source_dialogs.ycp";
+
+    import "PackageCallbacks";
+	import "GetInstArgs";
+	import "SourceManager";
+	import "Label";
+	import "Mode";
+	import "String";
+	import "Internet";
+	import "Wizard";
+    import "Stage";
+	import "Sequencer";
+	import "Progress";
+    import "ProductControl";
+
+	/**
+	 ** Check whether this catalogue is already subscribed
+	 **/
+	list<string> DeDupe(list<string> url_list)
+	{
+		list<integer> sources = Pkg::SourceStartCache(true);
+
+		list<string> existingSources = [];
+		list<string> deduped = [];
+		foreach (integer value, sources, 
+		{
+			string url = Pkg::SourceMediaData(value)["url"]:"Error";
+
+			existingSources = add(existingSources,url);
+		});
+
+		foreach(string new, url_list,
+		{
+			if (!contains(existingSources,new))
+			{
+				deduped = add(deduped,new);
+			}
+		});
+
+		return deduped;
+	}
+
+	list<integer> sourceids = [];
+	/**
+	 ** Subscribe to all the specified catalogues
+	 ** return true if all catalogues were added successfully, false otherwise.
+	 **/
+	boolean addRepositories(list<string> repositories)
+	{
+		list<string> dedupedRepos = DeDupe(repositories);
+		foreach (string new_url, dedupedRepos,
+		{
+			boolean again = true;
+			while(again)
+			{
+				integer srcid = Pkg::SourceCreate(new_url, "/");
+				if (srcid == -1)
+				{
+					if (Popup::YesNo (_("An error occurred while creating the installation source.") + "\n"	+ _("Details:") + "\n" + Pkg::LastError() + "\n" + _("Try again?")))
+					{
+						new_url = editUrl (new_url);
+					}
+					else
+					{
+						again = false;
+						return false;
+					}
+				}
+				else
+				{
+					sourceids = add(sourceids,srcid);
+					// enable and save the source
+					Pkg::SourceSetEnabled(srcid, true);
+					Pkg::SourceSaveAll();
+					again = false;
+				}
+			}
+		});
+		return true;
+	}
+
+	/**
+	 ** Install all the specified packages
+	 ** return true if all installations were successful, false otherwise
+	 **/
+	boolean installPackages(list<string> packages)
+	{
+		foreach (string name, packages,
+		{
+			Pkg::PkgInstall(name);
+		});
+
+		boolean state = true;
+		Pkg::TargetInit( "/", false );
+		if(Pkg::PkgSolve(true))	
+		{
+			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
+		}
+		else
+			state = false;
+
+		return state;
+    }
+
+	boolean removeAddedRepositories()
+	{
+		boolean success = true;
+		foreach(integer srcid, sourceids, 
+			{
+				success = success && Pkg::SourceDelete(srcid);
+			}
+		);
+		Pkg::SourceSaveAll();
+		return success;
+	}
+
+	//Get the catalogues to add and packages to install from the arguments
+
+	list args = WFM::Args();
+	
+	boolean temporary = false;
+	list<string> repos = [];
+	list<string> pkgs = [];
+	foreach (string arg, (list<string>) WFM::Args(),
+		{
+			integer repoIndex = find(arg,"repos:");
+			integer pkgIndex = find(arg,"packages:");
+			integer tempIndex = find(arg,"temporary:");
+
+			if (repoIndex == 0)
+			{
+				repos = splitstring(substring(arg,6,(size(arg) - 6)),",");
+			} else if (pkgIndex == 0)
+			{
+				pkgs = splitstring(substring(arg,9,(size(arg) - 6)),",");
+			} else if (tempIndex == 0)
+			{
+				temporary = (substring(arg,10,size(arg)) == "true");
+			}
+		}
+	);
+
+	boolean success = false;
+
+	//try and add the repositories
+	success = addRepositories(repos);
+	//if that was successful now try and install the packages
+	if (success)
+	{
+		success = installPackages(pkgs);
+	}
+
+	if (temporary)
+	{
+		removeAddedRepositories();
+	}
+
+	return success;
+}
+
+
+

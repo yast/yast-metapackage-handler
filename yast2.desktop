@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment=
+Comment[en_GB]=
+Exec=/sbin/yast2 MetaPackageUrlHandler
+GenericName=
+GenericName[en_GB]=
+Icon=
+InitialPreference=2
+MimeType=text/ymu
+Name=yast2
+Name[en_GB]=yast2
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DCOP-ServiceType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

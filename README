@@ -1,0 +1,15 @@
+copy 'ymp.desktop' to ~/.kde/share/mimelnk/text/
+copy 'ymu.desktop' to ~/.kde/share/mimelnk/text/
+copy 'yast2.desktop' to ~/.kde/share/applnk/.hidden
+append the lines in 'config' to ~/.kde/share/config/profilerc
+add the lines in 'konqueror' to ~/.kde/share/config/konquerorrc in the [Notification Messages] section
+copy MetaPackageParser.pm to /usr/share/YaST2/modules
+copy SearchClient.pm to /usr/share/YaST2/modules
+copy *.ycp to /usr/share/YaST2/clients
+copy Simple.pm to /usr/share/YaST2/modules/XML/Simple.pm
+run kbuildsycoca
+killall konqueror
+go to http://www.dcs.warwick.ac.uk/~csueeh/test.html and see if the link works
+(below are down atm, sorry)
+go to http://bw.uwcs.co.uk/test.html and see if the link works. 
+go to http://benjiweber.co.uk:8080/webpin/index-test.jsp search for something, and see if the "Install Now" links work
