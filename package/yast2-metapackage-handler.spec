@@ -70,7 +70,7 @@ KRC=%{kdeprefix}/share/config/konquerorrc
 
 %files
 %defattr(-,root,root)
-%doc README
+%doc README tuxsaver.html tuxsaver.ymp
 %{kdeprefix}/share/mimelnk/text/ym?.desktop
 %{kdeprefix}/share/applnk/.hidden/yast2.desktop
 %dir %{_datadir}/YaST2

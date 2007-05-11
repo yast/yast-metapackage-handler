@@ -13,6 +13,8 @@ FILES=\
  PackageSearch.ycp \
  README \
  SearchClient.pm \
+ tuxsaver.html \
+ tuxsaver.ymp \
  yast2.desktop \
  ymp.desktop \
  ymu.desktop
