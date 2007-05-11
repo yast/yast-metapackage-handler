@@ -3,7 +3,7 @@
 %define _prefix	/usr
 %define kdeprefix	/opt/kde3
 
-Name:				yast2-mpp
+Name:				yast2-metapackage-handler
 Version:			0.1
 Release:			0.suse%(echo "%{suse_version}" | %__sed -e 's/.$//')
 Summary:			YaST2 MetaPackage Parser
@@ -70,7 +70,7 @@ KRC=%{kdeprefix}/share/config/konquerorrc
 
 %files
 %defattr(-,root,root)
-%doc README tuxsaver.html tuxsaver.ymp
+%doc README COPYING tuxsaver.html tuxsaver.ymp
 %{kdeprefix}/share/mimelnk/text/ym?.desktop
 %{kdeprefix}/share/applnk/.hidden/yast2.desktop
 %dir %{_datadir}/YaST2
@@ -79,13 +79,6 @@ KRC=%{kdeprefix}/share/config/konquerorrc
 %{_datadir}/YaST2/modules/SearchClient.pm
 %dir %{_datadir}/YaST2/clients
 %{_datadir}/YaST2/clients/*.ycp
-
-%changelog
-* Thu May 09 2007 Martin Vidner <mvidner@suse.cz>
-- autobuild adjustments
-
-* Sat Apr 21 2007 Pascal Bleser <guru@unixtech.be> 0.0-0
-- new package
 
 # Local Variables:
 # mode: rpm-spec

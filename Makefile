@@ -3,6 +3,7 @@ FILES=\
  Makefile \
  \
  config \
+ COPYING \
  kdesu.desktop \
  konqueror \
  konquerorrc \
