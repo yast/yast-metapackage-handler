@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu May 17 10:16:54 CEST 2007 - mvidner@suse.cz
+
+- Call the complex package selector in summary mode if there are
+  non-automatically resolvable conflicts (#274058).
+- 0.2
+
+-------------------------------------------------------------------
 Fri May 11 09:57:24 CEST 2007 - mvidner@suse.cz
 
 - initial packaging for autobuild

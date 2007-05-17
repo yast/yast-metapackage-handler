@@ -99,9 +99,17 @@
 		if(Pkg::PkgSolve(true))	
 		{
 			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
+		} else //xxx no callback for resolve failures
+		{
+			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
+			if (result == `accept)
+			{
+				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
+			} else
+			{
+				state = false;
+			}
 		}
-		else
-			state = false;
 
 		return state;
     }

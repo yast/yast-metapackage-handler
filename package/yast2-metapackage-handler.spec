@@ -4,7 +4,7 @@
 %define kdeprefix	/opt/kde3
 
 Name:				yast2-metapackage-handler
-Version:			0.1
+Version:			0.2
 Release:			0.suse%(echo "%{suse_version}" | %__sed -e 's/.$//')
 Summary:			YaST2 MetaPackage Parser
 Source:			mp.tar.gz
