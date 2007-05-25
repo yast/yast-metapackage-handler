@@ -1,14 +1,11 @@
 [Desktop Entry]
 Comment=
-Comment[en_GB]=
 Exec=kdesu yast2 MetaPackageHandler
 GenericName=
-GenericName[en_GB]=
 Icon=
 InitialPreference=2
 MimeType=text/ymp
 Name=kdesu
-Name[en_GB]=kdesu
 Path=
 StartupNotify=true
 Terminal=false
