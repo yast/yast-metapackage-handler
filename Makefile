@@ -2,23 +2,14 @@
 FILES=\
  Makefile \
  \
- config \
  COPYING \
- kdesu.desktop \
- konqueror \
- konquerorrc \
  MetaPackageHandler.ycp \
  MetaPackageParser.pm \
  MetaPackageUrlHandler.ycp \
  MetaPackageWorker.ycp \
- PackageSearch.ycp \
  README \
- SearchClient.pm \
  tuxsaver.html \
- tuxsaver.ymp \
- yast2.desktop \
- ymp.desktop \
- ymu.desktop
+ tuxsaver.ymp
 
 PACKAGE=mp
 DISTDIR=.dist
