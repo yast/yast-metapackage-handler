@@ -64,6 +64,8 @@
 	string validPackageChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-";
 	string invalidURLChars = " |#$^*()'";
 
+	string SU_CMD = "xdg-su -c";
+
 	//strings used
 	string packagedescription = _("Select the software components you wish to install:");
 	string description = _("Select the software repositories you wish to subscribe to:");
@@ -85,10 +87,13 @@
 	string remainSubscribed = _("Remain subscribed to these repositories after installation");
 	string youWillRemainSubscribed = _("You will remain subscribed to these repositories after installation.");
 	string youWillNotRemainSubscribed = _("These repositories will only be added during installation, you will not remain subscribed.");
-	string nb = _("NB:");
+	string nb = _("Note:");
 	list args = WFM::Args();
 	if (size(args) > 0)
 		metaPackageUrl = args[0]:metaPackageUrl;
+
+	if (substring(metaPackageUrl,0,1) == "/")
+		metaPackageUrl = "file://" + metaPackageUrl;
 
 	map <string, any> xml = MetaPackageParser::GetMetaPackage(metaPackageUrl);
 	list<map<string,string> > packages = unMunge(xml,"package");
@@ -494,7 +499,7 @@
 				y2milestone(temporaryStr);
 
 				string status = failed; 
-				integer ret = (integer)SCR::Execute (.target.bash, "kdesu '/sbin/yast2 MetaPackageWorker " + repoStr + " " + packageStr + " " + temporaryStr + "'");
+				integer ret = (integer)SCR::Execute (.target.bash, SU_CMD + " '/sbin/yast2 MetaPackageWorker " + repoStr + " " + packageStr + " " + temporaryStr + "'");
 				if (ret == 0)
 				{
 					status = successful;
