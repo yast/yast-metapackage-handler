@@ -30,7 +30,7 @@ Authors:
 
 %install
 %__install -d "%{buildroot}%{_datadir}/YaST2/modules"
-%__install -m0644 MetaPackageParser.pm SearchClient.pm "%{buildroot}%{_datadir}/YaST2/modules/"
+%__install -m0644 MetaPackageParser.pm "%{buildroot}%{_datadir}/YaST2/modules/"
 %__install -d "%{buildroot}%{_datadir}/YaST2/clients"
 %__install -m0644 *.ycp "%{buildroot}%{_datadir}/YaST2/clients/"
 
@@ -43,7 +43,6 @@ Authors:
 %dir %{_datadir}/YaST2
 %dir %{_datadir}/YaST2/modules
 %{_datadir}/YaST2/modules/MetaPackageParser.pm
-%{_datadir}/YaST2/modules/SearchClient.pm
 %dir %{_datadir}/YaST2/clients
 %{_datadir}/YaST2/clients/*.ycp
 

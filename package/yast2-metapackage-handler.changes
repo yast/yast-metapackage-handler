@@ -3,6 +3,8 @@ Fri Jun  8 13:12:37 CEST 2007 - mvidner@suse.cz
 
 - Use xdg-su instead of kdesu.
 - Removed KDE config stuff, will be put it to kdebase3-SUSE.
+- Removed prototype of search client.
+- 0.3
 
 -------------------------------------------------------------------
 Fri May 25 13:30:04 CEST 2007 - jsrain@suse.cz
