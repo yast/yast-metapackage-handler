@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://opensuse.org/Standards/One_Click_Install" xmlns:o="http://opensuse.org/Standards/One_Click_Install">
+  <xs:complexType name="product">
+    <xs:sequence>
+      <xs:element ref="o:name"/>
+      <xs:element maxOccurs="unbounded" ref="o:summary"/>
+      <xs:element maxOccurs="unbounded" ref="o:description"/>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="recommended" type="xs:boolean"/>
+    <xs:attribute name="architectures" type="xs:string"/>
+    <xs:attribute name="action" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="summary" type="o:translateablestring"/>
+  <xs:element name="description" type="o:translateablestring"/>
+  <xs:complexType name="repository">
+    <xs:sequence>
+      <xs:element ref="o:name"/>
+      <xs:element maxOccurs="unbounded" ref="o:summary"/>
+      <xs:element maxOccurs="unbounded" ref="o:description"/>
+      <xs:element maxOccurs="unbounded" ref="o:url"/>
+    </xs:sequence>
+    <xs:attribute name="recommended" type="xs:boolean"/>
+    <xs:attribute name="format" type="xs:string"/>
+    <xs:attribute name="producturi" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="url" type="o:mirrorableURL"/>
+  <xs:complexType name="translateablestring">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="lang" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="mirrorableURL">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="score" type="xs:integer"/>
+        <xs:attribute name="location" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="group">
+    <xs:sequence>
+      <xs:element ref="o:repositories"/>
+      <xs:element ref="o:products"/>
+    </xs:sequence>
+    <xs:attribute name="recommended" type="xs:boolean"/>
+    <xs:attribute name="distversion" use="required" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="repositories">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="o:repository"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="repository" type="o:repository"/>
+  <xs:element name="products">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="o:product"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="product" type="o:product"/>
+  <xs:element name="metapackage">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="o:group"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="group" type="o:group"/>
+</xs:schema>
