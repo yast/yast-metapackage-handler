@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jul 23 13:14:03 CEST 2007 - mvidner@suse.cz
+
+- Mime type changed from text/ymu to text/x-suse-ymu (#292715).
+
+-------------------------------------------------------------------
 Fri Jun  8 13:12:37 CEST 2007 - mvidner@suse.cz
 
 - Use xdg-su instead of kdesu.
