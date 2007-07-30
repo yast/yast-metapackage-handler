@@ -1,0 +1,164 @@
+{
+	textdomain "OneClickInstall";
+	module "OneClickInstallWorkerResponse";
+
+	import "XML";
+
+	string DEFAULT_FAILURE_STAGE = _("unknown");
+	string DEFAULT_ERROR_MESSAGE = _("An unknown error occurred.");
+	string DEFAULT_NOTE = "";
+	string success = "false";
+	string note = DEFAULT_NOTE;
+	string failureStage = DEFAULT_FAILURE_STAGE;
+	string errorMessage = DEFAULT_ERROR_MESSAGE;
+	list<string> failedPackages = [];
+	list<string> failedPatterns = [];
+	list<string> failedRepositories = [];
+
+
+	/**
+	 * @return the success indicator.
+	**/
+	global boolean GetSuccess()
+	{
+		return (success == "true");
+	}
+	/**
+	 * @param the success status to set.
+	**/
+	global void SetSuccess(boolean value)
+	{
+		if (value)
+		{
+			success = "true";
+		} else
+		{
+			success = "false";
+		}
+	}
+	/**
+	 * @return the string representation of the failure stage of the install process.
+	**/
+	global string GetFailureStage()
+	{
+		return failureStage;
+	}
+	/**
+	 * @param value the string representation of the failure stage of the install process.
+	**/
+	global void SetFailureStage(string value)
+	{
+		failureStage = value;
+	}
+	/**
+	 * @return the error message.
+	**/
+	global string GetErrorMessage()
+	{
+		return errorMessage;
+	}
+	/**
+	 * @param value the error message.
+	**/
+	global void SetErrorMessage(string value)
+	{
+		errorMessage = value;
+	}
+	/**
+	 * @return the note.
+	**/
+	global string GetNote()
+	{
+		return note;
+	}
+	/**
+	 * @param value the note to set.
+	**/
+	global void SetNote(string value)
+	{
+		note = value;
+	}
+
+	global list<string> GetFailedPackages()
+	{
+		return failedPackages;
+	}
+	global void AddFailedPackage(string value)
+	{
+		failedPackages = add(failedPackages,value);
+	}
+
+	global list<string> GetFailedPatterns()
+	{
+		return failedPatterns;
+	}
+	global void AddFailedPattern(string value)
+	{
+		failedPatterns = add(failedPatterns,value);
+	}
+
+	global list<string> GetFailedRepositories()
+	{
+		return failedRepositories;
+	}
+	global void AddFailedRepository(string value)
+	{
+		failedRepositories = add(failedRepositories,value);
+	}
+
+
+	/**
+	 * Sets up YaST's XML serialisation for this data structure.
+	**/
+	void SetupXML()
+	{
+		map doc = $[];
+		doc["listEntries"] =
+			$[
+				"failedRepositories":"repository",
+				"failedPackages":"package",
+				"failedPatterns":"pattern"
+			];
+		doc["cdataSections"] = [];
+		doc["rootElement"] = "OneClickInstallWorkerResponse";
+		doc["systemID"] = "/un/defined";
+		doc["nameSpace"] = "http://www.suse.com/1.0/yast2ns";
+		doc["typeNamespace"] = "http://www.suse.com/1.0/configns";
+		XML::xmlCreateDoc(`OneClickInstallWorkerResponse,doc);
+	}
+
+	/**
+	 * Serialises this data structure to XML.
+	 * @param filename the file to serialise to.
+	**/
+	global void ToXML(string filename)
+	{
+		SetupXML();
+		map<string,any > toSerialise = $[];
+		toSerialise = add(toSerialise,"success",success);
+		toSerialise = add(toSerialise,"failureStage",failureStage);
+		toSerialise = add(toSerialise,"errorMessage",errorMessage);
+		toSerialise = add(toSerialise,"note",note);
+		toSerialise = add(toSerialise,"failedRepositories",failedRepositories);
+		toSerialise = add(toSerialise,"failedPackages",failedPackages);
+		toSerialise = add(toSerialise,"failedPatterns",failedPatterns);
+		boolean success = XML::YCPToXMLFile(`OneClickInstallWorkerResponse,toSerialise, filename);
+	}
+
+	/**
+	 * DeSerialises this data structure from XML.
+	 * @param filename the file to deserialise from.
+	**/
+	global void FromXML(string filename)
+	{
+		SetupXML();
+		map<string,any> deSerialised = (map<string,any >)XML::XMLToYCPFile(filename);
+		success = deSerialised["success"]:"false";
+		failureStage = deSerialised["failureStage"]:DEFAULT_FAILURE_STAGE;
+		errorMessage = deSerialised["errorMessage"]:DEFAULT_ERROR_MESSAGE;
+		note = deSerialised["note"]:DEFAULT_NOTE;
+		failedRepositories = deSerialised["failedRepositories"]:[];
+		failedPackages = deSerialised["failedPackages"]:[];
+		failedPatterns = deSerialised["failedPatterns"]:[];
+	}
+}

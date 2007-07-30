@@ -1,0 +1,267 @@
+{
+	textdomain "OneClickInstall";
+
+	import "OneClickInstall";
+	import "OneClickInstallWorkerResponse";
+	import "Popup";
+	include "packager/inst_source_dialogs.ycp";
+    import "PackageCallbacks";
+	import "SourceManager";
+	import "Progress";
+	/**
+	 ** Check whether this repository is already subscribed
+	 **/
+	list<string> DeDupe(list<string> url_list)
+	{
+		list<integer> sources = Pkg::SourceStartCache(true);
+
+		list<string> existingSources = [];
+		list<string> deduped = [];
+		foreach (integer value, sources, 
+		{
+			string url = Pkg::SourceMediaData(value)["url"]:"Error";
+
+			existingSources = add(existingSources,url);
+		});
+
+		foreach(string new, url_list,
+		{
+			if (!contains(existingSources,new))
+			{
+				deduped = add(deduped,new);
+			}
+		});
+
+		return deduped;
+	}
+
+	list<integer> sourceids = [];
+	/**
+	 ** Subscribe to all the specified repositories
+	 ** return true if all catalogues were added successfully, false otherwise.
+	 **/
+	boolean addRepositories(list<string> repositories)
+	{
+		list<string> dedupedRepos = DeDupe(repositories);
+		foreach (string new_url, dedupedRepos,
+		{
+			boolean again = true;
+			while(again)
+			{
+				integer srcid = Pkg::SourceCreate(new_url, "/");
+				if (srcid == -1)
+				{
+					if (Popup::YesNo (_("An error occurred while creating the installation source.") + "\n"	+ _("Details:") + "\n" + Pkg::LastError() + "\n" + _("Try again?")))
+					{
+						new_url = editUrl (new_url);
+					}
+					else
+					{
+						OneClickInstallWorkerResponse::AddFailedRepository(new_url);
+						again = false;
+						return false;
+					}
+				}
+				else
+				{
+					sourceids = add(sourceids,srcid);
+					// enable and save the source
+					Pkg::SourceSetEnabled(srcid, true);
+					Pkg::SourceSaveAll();
+					again = false;
+				}
+			}
+		});
+		return true;
+	}
+
+	/**
+	 ** Install all the specified packages
+	 ** return true if all installations were successful, false otherwise
+	 **/
+	boolean installPackages(list<string> packages)
+	{
+		foreach (string name, packages,
+		{
+			if (!Pkg::PkgInstall(name))
+				OneClickInstallWorkerResponse::AddFailedPackage(name);
+		});
+
+		boolean state = true;
+		Pkg::TargetInit( "/", false );
+		if(Pkg::PkgSolve(true))	
+		{
+			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
+		} else //xxx no callback for resolve failures
+		{
+			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
+			if (result == `accept)
+			{
+				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
+			} else
+			{
+				state = false;
+			}
+		}
+
+		return state;
+    }
+
+	/**
+	 ** Install all the specified patterns
+	 ** return true if all installations were successful, false otherwise
+	 **/
+	boolean installPatterns(list<string> patterns)
+	{
+		foreach (string name, patterns,
+		{
+			if (!Pkg::ResolvableInstall(name,`pattern))
+				OneClickInstallWorkerResponse::AddFailedPattern(name);
+		});
+
+		boolean state = true;
+		Pkg::TargetInit( "/", false );
+		if(Pkg::PkgSolve(true))	
+		{
+			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
+		} else //xxx no callback for resolve failures
+		{
+			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
+			if (result == `accept)
+			{
+				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
+			} else
+			{
+				state = false;
+			}
+		}
+
+		return state;
+    }
+
+	/**
+	 ** Remove all the specified packages
+	 ** return true if all installations were successful, false otherwise
+	 **/
+	boolean removePackages(list<string> packages)
+	{
+		boolean result = true;
+		foreach (string name, packages,
+		{
+			if (Pkg::IsProvided (name))
+				result = Pkg::PkgDelete(name);
+		});
+
+		boolean state = true;
+		Pkg::TargetInit( "/", false );
+		if(Pkg::PkgSolve(true))	
+		{
+			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
+		} else //xxx no callback for resolve failures
+		{
+			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
+			if (result == `accept)
+			{
+				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
+			} else
+			{
+				state = false;
+			}
+		}
+
+		return state;
+    }
+
+	boolean removeAddedRepositories()
+	{
+		boolean success = true;
+		foreach(integer srcid, sourceids, 
+			{
+				success = success && Pkg::SourceDelete(srcid);
+			}
+		);
+		Pkg::SourceSaveAll();
+		return success;
+	}
+
+	//Get the catalogues to add and packages to install from the arguments
+
+	list args = WFM::Args();
+		
+	string xmlFileName = args[0]:"";
+
+	if (xmlFileName == "")
+		return false;
+
+	//Load the xml communication from the user interface.
+	OneClickInstall::FromXML(xmlFileName);
+
+	boolean success = true;
+
+	//try and add the repositories
+	if (OneClickInstall::HaveRepositoriesToInstall())
+	{
+		success = addRepositories(OneClickInstall::GetRequiredRepositories());
+	}
+	if (!success)
+	{
+		OneClickInstallWorkerResponse::SetFailureStage("Adding Repositories");
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to subscribe to the required repositories. Please review the yast2 logs for more information"));
+	}
+
+	//Remove any removals
+	if (success && OneClickInstall::HaveRemovalsToInstall())
+	{
+		success = removePackages(OneClickInstall::GetRequiredRemoveSoftware());
+	}
+	if (!success)
+	{
+		OneClickInstallWorkerResponse::SetFailureStage("Removing Packages");
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to remove the specified packages. Please review the yast2 logs for more information"));
+	}
+
+	//if that was successful now try and install the patterns
+	if (success && OneClickInstall::HavePatternsToInstall())
+	{
+		success = installPatterns(OneClickInstall::GetRequiredPatterns());
+	}
+	if (!success)
+	{
+		OneClickInstallWorkerResponse::SetFailureStage("Installing Patterns");
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified patterns. Please review the yast2 logs for more information"));
+	}
+
+	//if that was successful now try and install the packages
+	if (success && OneClickInstall::HavePackagesToInstall())
+	{
+		success = installPackages(OneClickInstall::GetRequiredPackages());
+	}
+	if (!success)
+	{
+		OneClickInstallWorkerResponse::SetFailureStage("Installing Packages");
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified packages. Please review the yast2 logs for more information"));
+	}
+
+	//If we don't want to remain subscribed, remove the repositories that were added for installation.
+	if (OneClickInstall::HaveRepositoriesToInstall() && !OneClickInstall::GetRemainSubscribed())
+	{
+		success = removeAddedRepositories();
+	}
+	if (!success)
+	{
+		OneClickInstallWorkerResponse::SetFailureStage("Removing temporarily installed repositories.");
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to unsubscribe from the repositories that were used to perform the installation. You can remove them manually in YaST > Installation Sources. Please review the yast2 logs for more information"));
+	}
+
+	OneClickInstallWorkerResponse::SetSuccess(success);
+
+	if (success)
+	{
+		OneClickInstallWorkerResponse::SetFailureStage("No Failure");
+		OneClickInstallWorkerResponse::SetErrorMessage(_("No error occurred"));
+	}
+
+	//Overwrite the information we were passed with our response back to the UI.
+	OneClickInstallWorkerResponse::ToXML(xmlFileName);
+	return success;
+}

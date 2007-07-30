@@ -1,0 +1,790 @@
+/*
+ * User Interface for the One Click Install Feature.
+ */
+{
+	textdomain "OneClickInstall";
+
+	import "OneClickInstall";
+	import "OneClickInstallWorkerResponse";
+	import "Wizard";
+	import "Popup";
+	import "Label";
+	import "HTTP";
+	import "FTP";
+	list args = WFM::Args();
+
+	string SU_CMD = "xdg-su -c";
+	string SEPARATOR = "/";
+
+	string metaPackageUrl = "http://opensuse.org/repos.ymp";
+
+
+
+	if (size(args) > 0)
+		metaPackageUrl = args[0]:metaPackageUrl;
+
+	if (substring(metaPackageUrl,0,1) != "/")
+	{
+		string newUrl = (string)SCR::Read (.target.tmpdir) + SEPARATOR + "metapackage.xml";
+		if (substring(metaPackageUrl,0,4) == "http")
+		{
+			map response = HTTP::Get(metaPackageUrl,newUrl);
+			if (response["code"]:400 >= 400)
+				return;
+			metaPackageUrl = newUrl;
+		} else if (substring(metaPackageUrl,0,3) == "ftp")
+		{
+			FTP::Get(metaPackageUrl,newUrl);
+			metaPackageUrl = newUrl;
+		} else return false;	
+	}
+
+	OneClickInstall::Load(metaPackageUrl);
+
+	/** <region name="String constants"> **/
+
+	string SOFTWARE_DESCRIPTION = _("Select the software components you wish to install:");
+	string REMOVE_DESCRIPTION = _("Select the software components you wish to remove:");
+	string REPOSITORIES_DESCRIPTION = _("Select the software repositories you wish to subscribe to:");
+	string REPOSITORY_DESCRIPTION_HEADING = _("Repository Description:");
+	string SOFTWARE_DESCRIPTION_HEADING = _("Package Description:");
+	string REPOSITORY_HEADING = _("Additional Software Repositories");
+	string SOFTWARE_HEADING = _("Software to be installed");
+	string REMOVE_HEADING = _("Software to be Removed");
+	string PLEASE_WAIT = _("Please wait patiently while this software is installed.");
+	string INSTALLATION_HEADING = _("Software installation");
+	string HELP1 = _("This wizard will install software onto your computer");
+	string HELP2 = _("See http://en.opensuse.org/MetaPackages for more information");
+	string WARNING = _("Warning:");
+	string WARNING1 = _("If you choose to continue the following changes will be made to your system");
+	string REPOSITORY_SUMMARY = _("The following repositories will be subscribed to:");
+	string SOFTWARE_SUMMARY = _("The following software items will be installed:");
+	string REMOVE_SUMMARY = _("The following software items will be REMOVED:");
+	string FAILED = _("Unfortunately the installation has failed, see the log file at /var/log/YaST2/y2log for more information. Failure stage was: ");
+	string ERROR_MESSAGE = _("Error Message");
+	string SUCCESSFUL = _("Installation was successful");
+	string ONLY_PARTIALLY_SUCCESSFUL = _("Installation was only partially successful.");
+	string STATUS = _("Installation status:");
+	string REMAIN_SUBSCRIBED = _("Remain subscribed to these repositories after installation");
+	string WILL_REMAIN_SUBSCRIBED = _("You will remain subscribed to these repositories after installation.");
+	string WILL_NOT_REMAIN_SUBSCRIBED = _("These repositories will only be added during installation, you will not remain subscribed.");
+	string NB = _("Note:");
+	string NOTHING = _("There is nothing to do.");
+	string REQUIRE_ADVANCED = _("Advanced mode, with ability to change settings.");
+	string SPLASH_HEADING = _("Welcome");
+	string WIZARD_DESCRIPTION1 = _("This wizard will install");
+	string WIZARD_DESCRIPTION2 = _("onto your computer.");
+	string SUMMARY_HEADING = _("Summary");
+	string DESCRIPTION_HEADING = _("Description");
+	string REPOSITORIES_FAILED = _("The following repositories could not be added");
+	string PATTERNS_FAILED = _("The following patterns could not be installed");
+	string PACKAGES_FAILED = _("The following packages could not be installed");
+	/** </region> **/
+
+	/** <region name="Define the UI components"> **/
+
+    string HELP_TEXT =
+	"<h3>" + SOFTWARE_DESCRIPTION + "</h3>"
+	+ "<p>" + HELP1 + "</p>"
+	+ "<p>" + HELP2 + "</p>";
+
+	//xxx without this the width of the items in the multi-selection-box seems to be broken.
+	string SPACER = "                                                                    ";
+	term repositoriesUI = `VBox
+	(
+		`VWeight(2,
+					`Heading(REPOSITORY_HEADING)
+				),
+		`VWeight(10,
+					`MultiSelectionBox(`id(`repositoriesCheckList),`opt(`notify), REPOSITORIES_DESCRIPTION, [SPACER])
+				),
+		`VWeight(1,
+					`CheckBox(`id(`remain),REMAIN_SUBSCRIBED,true)	
+				),
+		`VWeight(5,
+					`RichText(`id(`descrLabel),"")
+				)	
+	);
+
+	term softwareUI = `VBox
+	(
+		`VWeight(2,
+					`Heading(SOFTWARE_HEADING)
+				),
+		`VWeight(10,
+					`MultiSelectionBox(`id(`softwareCheckList),`opt(`notify), SOFTWARE_DESCRIPTION, [SPACER])
+				),
+		`VWeight(5,
+					`RichText(`id(`packageDescrLabel),"")
+				)	
+	
+	);
+
+	term removeUI = `VBox
+	(
+		`VWeight(2,
+					`Heading(REMOVE_HEADING)
+				),
+		`VWeight(10,
+					`MultiSelectionBox(`id(`removeCheckList),`opt(`notify), REMOVE_DESCRIPTION, [SPACER])
+				),
+		`VWeight(5,
+					`RichText(`id(`removeDescrLabel),"")
+				)
+	);
+
+	term nothing = `VBox
+	(
+		`Heading(NOTHING)
+	);
+
+    term confirm = `HBox(
+	`VBox(
+
+		`VWeight(5,
+				`RichText(`id(`summary),""))
+		)
+    );
+
+    term splash = `HBox(
+	`VBox(
+
+		`VWeight(5,
+				`RichText(`id(`splashMessage),"")),
+		`VWeight(1,
+					`CheckBox(`id(`advanced),REQUIRE_ADVANCED,false)
+				)
+		)
+    );
+
+    term perform = `HBox(
+	`HSpacing(1),
+	`VBox(
+	    `VSpacing(0.2),
+	    `Heading(PLEASE_WAIT),
+	    `VSpacing(0.2)
+	    ),
+	`HSpacing(1)
+    );
+
+    term result = `HBox(
+	`HSpacing(1),
+	`VBox(
+		`VSpacing(0.1),
+		`RichText(`id(`resultLabel),""),
+	    `VSpacing(0.2)
+	    ),
+	`HSpacing(1)
+    );
+	/** </region> **/
+	/** <region name="Setup the Wizard Steps"> **/
+	
+	list<map> installation_steps_simple = [];
+	list<map> installation_widgets_simple = [];
+
+		installation_steps_simple =	
+			[
+				$[ "id": "splash",		"label": _("Software Description") ],
+				$[ "id": "confirm",		"label": _("Installation Settings")	],
+				$[ "id": "perform",		"label": _("Perform Installation") ],
+				$[ "id": "result",		"label": _("Results") ]
+			];
+
+		installation_widgets_simple = 	
+			[
+				$["id": "splash", "widget":splash],
+				$["id": "confirm", "widget":confirm],
+				$["id": "perform", "widget":perform],
+				$["id": "result", "widget":result]
+			];	
+
+	list<map> installation_steps = installation_steps_simple;
+	list<map> installation_widgets = installation_widgets_simple;
+
+	list<map> installation_steps_advanced  = [];
+	list<map> installation_widgets_advanced = [];
+
+	if (OneClickInstall::HaveRepositories() && OneClickInstall::HaveSoftware() && !OneClickInstall::HaveRemovals())
+	{
+		installation_steps_advanced =	
+			[
+				$[ "id": "repositoriesUI",	"label": _("Repositories") ],
+				$[ "id": "softwareUI",	"label": _("Software")	],
+				$[ "id": "confirm",		"label": _("Installation Settings")	],
+				$[ "id": "perform",		"label": _("Perform Installation") ],
+				$[ "id": "result",		"label": _("Results") ]
+			];
+
+		installation_widgets_advanced = 	
+			[
+				$["id": "repositoriesUI", "widget":repositoriesUI],
+				$["id": "softwareUI", "widget":softwareUI],
+				$["id": "confirm", "widget":confirm],
+				$["id": "perform", "widget":perform],
+				$["id": "result", "widget":result]
+			];	
+	} else if (OneClickInstall::HaveRepositories() && OneClickInstall::HaveSoftware() && OneClickInstall::HaveRemovals())
+	{
+		installation_steps_advanced =	
+			[
+				$[ "id": "repositoriesUI",	"label": _("Repositories") ],
+				$[ "id": "softwareUI",	"label": _("Software")	],
+				$[ "id": "removeUI",	"label": _("Removals")	],
+				$[ "id": "confirm",		"label": _("Installation Settings")	],
+				$[ "id": "perform",		"label": _("Perform Installation") ],
+				$[ "id": "result",		"label": _("Results") ]
+			];
+		installation_widgets_advanced = 	
+			[
+				$["id": "repositoriesUI", "widget":repositoriesUI],
+				$["id": "softwareUI", "widget":softwareUI],
+				$["id": "removeUI", "widget":removeUI],
+				$["id": "confirm", "widget":confirm],
+				$["id": "perform", "widget":perform],
+				$["id": "result", "widget":result]
+			];	
+	} else if (OneClickInstall::HaveRepositories() && !OneClickInstall::HaveSoftware())
+	{
+		installation_steps_advanced =	
+			[
+				$[ "id": "repositoriesUI",	"label": _("Repositories") ],
+				$[ "id": "confirm",		"label": _("Installation Settings")	],
+				$[ "id": "perform",		"label": _("Perform Installation") ],
+				$[ "id": "result",		"label": _("Results") ]
+			];
+		installation_widgets_advanced = 	
+			[
+				$["id": "repositoriesUI", "widget":repositoriesUI],
+				$["id": "confirm", "widget":confirm],
+				$["id": "perform", "widget":perform],
+				$["id": "result", "widget":result]
+			];	
+	} else if (!OneClickInstall::HaveRepositories() && OneClickInstall::HaveSoftware() && !OneClickInstall::HaveRemovals())
+	{
+		installation_steps_advanced =	
+			[
+				$[ "id": "softwareUI",	"label": _("Software")	],
+				$[ "id": "confirm",		"label": _("Installation Settings")	],
+				$[ "id": "perform",		"label": _("Perform Installation") ],
+				$[ "id": "result",		"label": _("Results") ]
+			];
+		installation_widgets_advanced = 	
+			[
+				$["id": "softwareUI", "widget":softwareUI],
+				$["id": "confirm", "widget":confirm],
+				$["id": "perform", "widget":perform],
+				$["id": "result", "widget":result]
+			];	
+	} else if (!OneClickInstall::HaveRepositories() && OneClickInstall::HaveSoftware() && OneClickInstall::HaveRemovals())
+	{
+		installation_steps_advanced =	
+			[
+				$[ "id": "softwareUI",	"label": _("Software")	],
+				$[ "id": "removeUI",	"label": _("Removals")	],
+				$[ "id": "confirm",		"label": _("Installation Settings")	],
+				$[ "id": "perform",		"label": _("Perform Installation") ],
+				$[ "id": "result",		"label": _("Results") ]
+			];
+		installation_widgets_advanced = 	
+			[
+				$["id": "softwareUI", "widget":softwareUI],
+				$["id": "removeUI", "widget":removeUI],
+				$["id": "confirm", "widget":confirm],
+				$["id": "perform", "widget":perform],
+				$["id": "result", "widget":result]
+			];	
+	} else
+	{
+		installation_steps_advanced = 
+			[
+				$[ "id": "nothing",	"label": _("Nothing to do") ],
+			];
+		installation_widgets_advanced = 	
+			[
+				$["id": "nothing", "widget":nothing]
+			];
+	}
+	/** </region> **/
+
+	/** <region name="wizardy bits"> **/
+
+	define list<term> StringListToTermList(list<string> strList,boolean checked)
+	{
+		list<term> items = [];
+		foreach(string str, strList,
+		{
+			items = add(items,`item(`id(str),str,checked));
+		});
+		return items;
+	}
+
+
+
+	define boolean is_performing(integer no)
+	{
+		string current_id = (installation_steps[ no ]:nil)["id"]:"";
+		return (current_id == "perform");
+	};
+
+	define boolean is_confirming(integer no)
+	{
+		string current_id = (installation_steps[ no ]:nil)["id"]:"";
+		return (current_id == "confirm");
+	};
+
+	define boolean is_selecting_repositories(integer no)
+ 	{
+		string current_id = (installation_steps[ no ]:nil)["id"]:"";
+		return (current_id == "repositoriesUI");
+	};
+
+	define boolean is_selecting_software(integer no)
+ 	{
+		string current_id = (installation_steps[ no ]:nil)["id"]:"";
+		return (current_id == "softwareUI");
+	};
+
+	define boolean is_selecting_removals(integer no)
+ 	{
+		string current_id = (installation_steps[ no ]:nil)["id"]:"";
+		return (current_id == "removeUI");
+	};
+
+	define boolean is_done(integer no)
+ 	{
+		string current_id = (installation_steps[ no ]:nil)["id"]:"";
+		return (current_id == "result");
+	};
+
+	define boolean is_viewing_splash(integer no)
+ 	{
+		string current_id = (installation_steps[ no ]:nil)["id"]:"";
+		return (current_id == "splash");
+	};
+
+	define void SetupWizard()
+	{
+		UI::OpenDialog(`opt(`defaultsize ),
+			`Wizard(`opt(`stepsEnabled),
+				`back,  "&Back",
+				`abort, "Ab&ort",
+				`next,  "&Next" ) );
+	
+		UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/theme/SuSELinux/icons/22x22/apps/user_add.png" ) );
+		UI::WizardCommand(`SetDialogHeading( "Software Installation" ) );
+		UI::WizardCommand(`SetHelpText( HELP_TEXT ) );
+		
+		UI::WizardCommand(`AddStepHeading( "Installation Steps" ) );
+		
+		foreach ( map step,installation_steps, ``{
+			UI::WizardCommand(`AddStep( step["label"]:"", step["id"]:"" ) );
+		});
+	}
+	SetupWizard();
+	
+	integer current_step = 0;
+	
+	boolean done = false;
+
+	/** </region> **/
+
+	/** <region name="wire up the wizard UI to the OCI module">**/
+	
+	//This wouldn't be necessary if regexpsub wasn't so retarded.
+	define string NewLinesToRichText(string original)
+	{
+		string result = "";
+		list<string> lines = splitstring(original,"\n");
+		foreach(string line, lines,
+		{
+			result = result + line + "<br/>";
+		});
+		return result;
+	}
+
+
+    define void show_step(integer no)
+    {
+		string current_id = (installation_steps[ no ]:nil)["id"]:"";
+		if (is_done(no))
+		{
+			Wizard::SetNextButton (`finish, Label::FinishButton());
+		}
+
+		UI::ReplaceWidget(`id(`contents),(installation_widgets[ no ]:$[])["widget"]:nothing);
+	
+		UI::WizardCommand(`SetCurrentStep( current_id ) );
+		if (is_viewing_splash(no))
+		{
+			string splashStr = "<body bgcolor=\"White\"><h2>" + SPLASH_HEADING + "</h2>" ;
+			splashStr = splashStr + WIZARD_DESCRIPTION1 + " <b>" + OneClickInstall::GetName() + "</b> " + WIZARD_DESCRIPTION2;
+			splashStr = splashStr + "<h3>" + SUMMARY_HEADING + "</h3><p style=\"background-color:white;\">" + NewLinesToRichText(OneClickInstall::GetSummary()) + "</p>";
+			splashStr = splashStr + "<h3>" + DESCRIPTION_HEADING + "</h3><p>" + NewLinesToRichText(OneClickInstall::GetDescription()) + "</p></body>";
+			UI::ChangeWidget(`id(`splashMessage),`Value,splashStr);
+		}
+
+		if (is_selecting_repositories(no))
+		{
+			UI::ChangeWidget(`id(`remain),`Value,OneClickInstall::GetRemainSubscribed());
+			list<term> newRepositoryNames = (list<term>) merge
+				(
+					StringListToTermList(OneClickInstall::GetRequiredRepositories(),true),
+					StringListToTermList(OneClickInstall::GetNonRequiredRepositories(),false)
+				);
+			UI::ChangeWidget(`id(`repositoriesCheckList),`Items,
+				newRepositoryNames
+			);
+			term first = newRepositoryNames[0]:nil;
+			string firstUrl = "";
+			if (first != nil)
+				firstUrl = first[1]:"";
+			UI::ChangeWidget(`descrLabel, `Value,"<body bgcolor=\"White\"><h3>" + REPOSITORY_DESCRIPTION_HEADING + "</h3>" + NewLinesToRichText(OneClickInstall::GetRepositoryDescription(firstUrl)) + "</body>");
+			
+		}
+		if (is_selecting_software(no))
+		{
+			list<term> newSoftwareNames = (list<term>) merge
+				(
+					StringListToTermList(OneClickInstall::GetRequiredSoftware(),true),
+					StringListToTermList(OneClickInstall::GetNonRequiredSoftware(),false)
+				);
+			UI::ChangeWidget(`id(`softwareCheckList),`Items,
+				newSoftwareNames
+			);
+			term first = newSoftwareNames[0]:nil;
+			string firstname = "";
+			if (first != nil)
+				firstname = first[1]:"";
+			UI::ChangeWidget(`packageDescrLabel, `Value,"<body bgcolor=\"White\"><h3>" + SOFTWARE_DESCRIPTION_HEADING + "</h3>" + NewLinesToRichText(OneClickInstall::GetSoftwareDescription(firstname)) + "</body>");
+		}
+		if (is_selecting_removals(no))
+		{
+			list<term> newSoftwareNames = (list<term>) merge
+				(
+					StringListToTermList(OneClickInstall::GetRequiredRemoveSoftware(),true),
+					StringListToTermList(OneClickInstall::GetNonRequiredRemoveSoftware(),false)
+				);
+			UI::ChangeWidget(`id(`removeCheckList),`Items,
+				newSoftwareNames
+			);
+			term first = newSoftwareNames[0]:nil;
+			string firstname = "";
+			if (first != nil)
+				firstname = first[1]:"";
+			UI::ChangeWidget(`removeDescrLabel, `Value,"<body bgcolor=\"White\"><h3>" + SOFTWARE_DESCRIPTION_HEADING + "</h3>" + NewLinesToRichText(OneClickInstall::GetSoftwareDescription(firstname)) + "</body>");
+		}
+    };
+
+	define boolean events_before_stage_change(integer step, symbol button)
+	{
+		if (is_selecting_repositories(step))
+		{
+			OneClickInstall::SetRemainSubscribed((boolean)UI::QueryWidget(`id(`remain), `Value));
+		}
+		if (is_viewing_splash(step))
+		{
+			if((boolean)UI::QueryWidget(`id(`advanced), `Value))
+			{
+				installation_steps = installation_steps_advanced;
+				installation_widgets = installation_widgets_advanced;
+				SetupWizard();
+				show_step(0);
+				return false;
+			}
+		}
+		if (is_confirming(step) && (button == `next) )
+		{
+			return Popup::AnyQuestion ("Warning","Have you reviewed the changes that will be made to your system?\n\nMalicious packages could damage your system.","Yes","No",`focus_no);
+		}
+		return true;
+	}
+
+
+	define void events_after_stage_change(integer step, symbol button)
+	{
+		if (is_confirming(step))
+		{
+			string repoStr = "";
+			string packageStr = "";
+			string removeStr = "";
+			foreach (string repo, OneClickInstall::GetRequiredRepositories(), 
+				{
+					repoStr = repoStr + "<li>" + repo + " (" + OneClickInstall::GetRepositoryName(repo) + ")</li>";
+				}
+			);
+			
+			foreach (string package, OneClickInstall::GetRequiredSoftware(), 
+				{
+					packageStr = packageStr + "<li>" + package + "</li>";
+				}
+			);
+
+			foreach (string package, OneClickInstall::GetRequiredRemoveSoftware(), 
+				{
+					removeStr = removeStr + "<li>" + package + "</li>";
+				}
+			);
+
+			string tempOrPerm = WILL_REMAIN_SUBSCRIBED;
+			if ( !OneClickInstall::GetRemainSubscribed())
+			{
+				tempOrPerm = WILL_NOT_REMAIN_SUBSCRIBED;
+			} else
+			{
+				tempOrPerm = WILL_REMAIN_SUBSCRIBED;
+			}
+
+			string summaryStr = "<body bgcolor=\"White\"><h1>" + WARNING + "</h1>" +
+				"<font color='red'>" + WARNING1 + "</font>";
+
+			//Put remove message at top, incase people try to push it off the bottom of the warning by adding lots of packages.
+			if (removeStr != "")
+			{
+				summaryStr = summaryStr +"<h2><font color='red'>" + REMOVE_SUMMARY + "</font></h2>" +
+				removeStr;
+			}
+
+			if (repoStr != "")
+			{
+				summaryStr = summaryStr + "<h2>" + REPOSITORY_SUMMARY +"</h2>" +
+				repoStr + "<h3>" + NB + "</h3>" +
+				"<li>" + tempOrPerm + "</li>";
+			}
+
+			if (packageStr != "")
+			{
+				summaryStr = summaryStr + "<h2>" + SOFTWARE_SUMMARY + "</h2>" +
+				packageStr;
+			}
+
+
+			summaryStr = summaryStr + "</body>";
+				UI::ChangeWidget(`summary, `Value,
+					summaryStr
+				);
+		}
+		if (is_performing(step))
+		{
+			Wizard::DisableBackButton();
+			Wizard::DisableNextButton();
+
+			//I don't think we need to include timestamp/random seed here as yast seems to generate its own for tmpdir.
+			string communication_file =(string)SCR::Read (.target.tmpdir) + SEPARATOR + "oneclickinstall.xml";
+			OneClickInstall::ToXML(communication_file);
+
+			integer ret = (integer)SCR::Execute (.target.bash, SU_CMD + " '/sbin/yast2 OneClickInstallWorker " + communication_file + "'");
+			
+			//Load the response.
+			OneClickInstallWorkerResponse::FromXML(communication_file);
+
+			string statusStr = "<body bgcolor=\"White\"><h1>" + INSTALLATION_HEADING + "</h1>";
+
+			if (OneClickInstallWorkerResponse::GetSuccess())
+			{
+				if (
+					(size(OneClickInstallWorkerResponse::GetFailedRepositories()) == 0) &&
+					(size(OneClickInstallWorkerResponse::GetFailedPatterns()) == 0 ) &&
+					(size(OneClickInstallWorkerResponse::GetFailedPackages()) == 0 )
+					)
+				{
+					statusStr = statusStr + "<p>" + SUCCESSFUL + "</p>";
+				} 
+				else
+				{
+					statusStr = statusStr + "<p>" + ONLY_PARTIALLY_SUCCESSFUL + "</p>";
+				}
+			} else
+			{
+				statusStr = statusStr + "<p>" + FAILED + " " + OneClickInstallWorkerResponse::GetFailureStage() + "<p>";
+				statusStr = statusStr + "<h2>"+ ERROR_MESSAGE + "</h2><p>" + OneClickInstallWorkerResponse::GetErrorMessage() + "</p>";
+			}
+
+			if (size(OneClickInstallWorkerResponse::GetFailedRepositories()) > 0 )
+			{
+				statusStr = statusStr + "<h3>" + REPOSITORIES_FAILED + "</h3><p>";
+				foreach (string failed, OneClickInstallWorkerResponse::GetFailedRepositories(),
+				{
+					statusStr = statusStr + "<li>" + failed + "</li>";
+				});
+				statusStr = statusStr + "</p>";
+			}
+
+			if (size(OneClickInstallWorkerResponse::GetFailedPatterns()) > 0 )
+			{
+				statusStr = statusStr + "<h3>" + PATTERNS_FAILED + "</h3><p>";
+				foreach (string failed, OneClickInstallWorkerResponse::GetFailedPatterns(),
+				{
+					statusStr = statusStr + "<li>" + failed + "</li>";
+				});
+				statusStr = statusStr + "</p>";
+			}
+
+			if (size(OneClickInstallWorkerResponse::GetFailedPackages()) > 0 )
+			{
+				statusStr = statusStr + "<h3>" + PACKAGES_FAILED + "</h3><p>";
+				foreach (string failed, OneClickInstallWorkerResponse::GetFailedPackages(),
+				{
+					statusStr = statusStr + "<li>" + failed + "</li>";
+				});
+				statusStr = statusStr + "</p>";
+			}
+
+			statusStr = statusStr + "<p>" + OneClickInstallWorkerResponse::GetNote() + "</p>";
+
+			statusStr = statusStr + "</body>";
+			
+			current_step = current_step + 1;
+			Wizard::EnableNextButton();
+			
+			show_step( current_step );
+			
+			UI::ChangeWidget(`resultLabel, `Value, 
+			statusStr);
+		}
+	}
+	define void handle_input(symbol button)
+	{
+
+		if (button == `repositoriesCheckList)
+		{
+			//Get the description of this one.
+			string selected = (string) UI::QueryWidget( `id(button), `CurrentItem );
+			UI::ChangeWidget(`descrLabel, `Value,"<body bgcolor=\"White\"><h3>" + REPOSITORY_DESCRIPTION_HEADING + "</h3>" + NewLinesToRichText(OneClickInstall::GetRepositoryDescription(selected)) + "</body>");
+			//Set all repositories to non-required
+
+			//Set the currently selected repositories back to subscribed. 
+			OneClickInstall::SetRequiredRepositories((list<string>)UI::QueryWidget(`id(button), `SelectedItems));
+		}
+
+		if (button == `softwareCheckList)
+		{
+			string selected = (string) UI::QueryWidget( `id(button), `CurrentItem );
+			UI::ChangeWidget(`packageDescrLabel, `Value,"<body bgcolor=\"White\"><h3>" + SOFTWARE_DESCRIPTION_HEADING + "</h3>" + NewLinesToRichText(OneClickInstall::GetSoftwareDescription(selected)) + "</body>");
+			//Set the currently selected software back to install. 
+			OneClickInstall::SetRequiredSoftwares((list<string>)UI::QueryWidget(`id(button), `SelectedItems));
+		}
+
+		if (button == `removeCheckList)
+		{
+			string selected = (string) UI::QueryWidget( `id(button), `CurrentItem );
+			UI::ChangeWidget(`removeDescrLabel, `Value,"<body bgcolor=\"White\"><h3>" + SOFTWARE_DESCRIPTION_HEADING + "</h3>" + NewLinesToRichText(OneClickInstall::GetSoftwareDescription(selected)) + "</body>" );
+			//Set the currently selected removals back to remove. 
+			OneClickInstall::SetRequiredSoftwares((list<string>)UI::QueryWidget(`id(button), `SelectedItems));
+		}
+	}
+
+	/** </region> **/
+	/** <region name="event loop">**/
+	show_step(0);
+    while( !done )
+    {
+		symbol button = nil;
+		repeat
+		{
+			button = (symbol) Wizard::UserInput();
+			handle_input(button);
+
+		} until ((button != `repositoriesCheckList) && (button != `softwareCheckList));
+		if ( button == `abort )
+			break;
+
+		if ( button == `next || button == `back )
+		{
+			if (events_before_stage_change(current_step,button))
+			{
+
+				if ( button == `next && current_step+1 < size( installation_steps ) )
+				{
+					current_step = current_step+1;
+				}
+
+				if ( button == `back && current_step > 0 )
+				{
+					current_step = current_step -1;
+				}
+
+				show_step( current_step );
+
+				events_after_stage_change(current_step,button);
+
+				if ( button == `finish )
+				{
+					done = true;
+				}
+			}
+		}
+
+		if ( button == `finish )
+		{
+			done = true;
+		}
+	}
+	UI::CloseDialog();
+	/** </region> **/
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
