@@ -36,7 +36,11 @@
 		{
 			FTP::Get(metaPackageUrl,newUrl);
 			metaPackageUrl = newUrl;
-		} else return false;	
+		} else
+		{
+		    y2error ("Argument is neither local absolute path nor an HTTP or FTP URL. Bye.");
+		    return false;
+		}
 	}
 
 	OneClickInstall::Load(metaPackageUrl);
@@ -72,8 +76,8 @@
 	string NOTHING = _("There is nothing to do.");
 	string REQUIRE_ADVANCED = _("Advanced mode, with ability to change settings.");
 	string SPLASH_HEADING = _("Welcome");
-	string WIZARD_DESCRIPTION1 = _("This wizard will install");
-	string WIZARD_DESCRIPTION2 = _("onto your computer.");
+	// %1: software package
+	string WIZARD_DESCRIPTION = _("This wizard will install <b>%1</b> onto your computer.");
 	string SUMMARY_HEADING = _("Summary");
 	string DESCRIPTION_HEADING = _("Description");
 	string REPOSITORIES_FAILED = _("The following repositories could not be added");
@@ -417,7 +421,7 @@
 		if (is_viewing_splash(no))
 		{
 			string splashStr = "<body bgcolor=\"White\"><h2>" + SPLASH_HEADING + "</h2>" ;
-			splashStr = splashStr + WIZARD_DESCRIPTION1 + " <b>" + OneClickInstall::GetName() + "</b> " + WIZARD_DESCRIPTION2;
+			splashStr = splashStr + sformat (WIZARD_DESCRIPTION, OneClickInstall::GetName());
 			splashStr = splashStr + "<h3>" + SUMMARY_HEADING + "</h3><p style=\"background-color:white;\">" + NewLinesToRichText(OneClickInstall::GetSummary()) + "</p>";
 			splashStr = splashStr + "<h3>" + DESCRIPTION_HEADING + "</h3><p>" + NewLinesToRichText(OneClickInstall::GetDescription()) + "</p></body>";
 			UI::ChangeWidget(`id(`splashMessage),`Value,splashStr);
@@ -494,7 +498,7 @@
 		}
 		if (is_confirming(step) && (button == `next) )
 		{
-			return Popup::AnyQuestion ("Warning","Have you reviewed the changes that will be made to your system?\n\nMalicious packages could damage your system.","Yes","No",`focus_no);
+			return Popup::AnyQuestion (Label::WarningMsg(), _("Have you reviewed the changes that will be made to your system?\n\nMalicious packages could damage your system."), Label::YesButton(), Label::NoButton(),`focus_no);
 		}
 		return true;
 	}
