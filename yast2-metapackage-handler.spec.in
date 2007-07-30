@@ -43,6 +43,7 @@ Summary:			YaST2 MetaPackage Parser
 %files
 %defattr(-,root,root)
 %doc @docdir@
+/sbin/OneClickInstallUrlHandler
 %dir @clientdir@
 @clientdir@/*.ycp
 %dir @moduledir@

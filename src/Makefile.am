@@ -9,6 +9,8 @@ module_DATA = \
 	OneClickInstallWorkerResponse.ycp \
 	YPX.pm
 
+dist_sbin_SCRIPTS = OneClickInstallUrlHandler
+
 EXTRA_DIST = $(client_DATA) $(module_DATA)
 
 # module compilation
