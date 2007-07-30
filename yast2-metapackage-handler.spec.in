@@ -2,9 +2,28 @@
 
 @HEADER@
 
-BuildArch:		noarch
-Requires:		yast2-packager
-Requires:		perl-XML-XPath
+# should be required by devtools
+BuildRequires: pkgconfig perl-XML-Writer
+# y2tool
+BuildRequires: yast2-devtools
+# ycpc
+BuildRequires: yast2-core
+# we have a Perl part
+BuildRequires: yast2-perl-bindings
+BuildRequires:	perl-XML-XPath
+BuildRequires:	yast2
+BuildRequires:	yast2-country
+BuildRequires:	yast2-installation
+
+Requires:	yast2
+Requires:	yast2-packager
+Requires:	yast2-transfer
+# Language
+Requires:	yast2-country
+# Product
+Requires:	yast2-installation
+
+BuildArchitectures:	noarch
 
 Summary:			YaST2 MetaPackage Parser
 

@@ -10,3 +10,6 @@ module_DATA = \
 	YPX.pm
 
 EXTRA_DIST = $(client_DATA) $(module_DATA)
+
+# module compilation
+include $(top_srcdir)/Makefile.am.common
