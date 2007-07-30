@@ -15,6 +15,8 @@ BuildRequires:	yast2
 BuildRequires:	yast2-country
 BuildRequires:	yast2-installation
 
+Requires: 	yast2-perl-bindings
+Requires:	perl-XML-XPath
 Requires:	yast2
 Requires:	yast2-packager
 Requires:	yast2-transfer
