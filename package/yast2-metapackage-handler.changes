@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Aug  6 10:24:37 CEST 2007 - mvidner@suse.cz
+
+- Implementing http://en.opensuse.org/Standards/One_Click_Install
+- Use yast2-devtools for building
+- 0.5
+
+-------------------------------------------------------------------
 Mon Jul 23 13:14:03 CEST 2007 - mvidner@suse.cz
 
 - Mime type changed from text/ymu to text/x-suse-ymu (#292715).
