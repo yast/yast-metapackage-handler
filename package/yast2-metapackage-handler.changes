@@ -13,6 +13,14 @@ Mon Aug  6 10:24:37 CEST 2007 - mvidner@suse.cz
 - 0.5
 
 -------------------------------------------------------------------
+Wed Aug  1 10:48:01 CEST 2007 - mvidner@suse.cz
+
+- Add mimetype desktop files for distros before 10.3 (in OBS
+  openSUSE:Tools) (adrian)
+- Require /usr/bin/xdg-su (adrian)
+- 0.4.1
+
+-------------------------------------------------------------------
 Mon Jul 23 13:14:03 CEST 2007 - mvidner@suse.cz
 
 - Mime type changed from text/ymu to text/x-suse-ymu (#292715).

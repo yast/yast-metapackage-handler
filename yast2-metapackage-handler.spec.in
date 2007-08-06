@@ -24,6 +24,8 @@ Requires:	yast2-transfer
 Requires:	yast2-country
 # Product
 Requires:	yast2-installation
+# needed at runtime for invoking root mode
+Requires:	/usr/bin/xdg-su
 
 BuildArchitectures:	noarch
 
@@ -37,6 +39,15 @@ Summary:			YaST2 MetaPackage Parser
 @BUILD@
 
 @INSTALL@
+%if %suse_version <= 1020
+mkdir -p $RPM_BUILD_ROOT/opt/kde3/share/applnk/.hidden/
+mkdir -p $RPM_BUILD_ROOT/opt/kde3/share/mimelnk/text/
+chmod -R 0755 $RPM_BUILD_ROOT/opt/kde3
+install -m 0644 kdeymp.desktop \
+	$RPM_BUILD_ROOT/opt/kde3/share/applnk/.hidden/
+install -m 0644 x-suse-ymp.desktop \
+	$RPM_BUILD_ROOT/opt/kde3/share/mimelnk/text/
+%endif
 
 @CLEAN@
 
@@ -50,3 +61,6 @@ Summary:			YaST2 MetaPackage Parser
 @moduledir@/*.ycp
 @moduledir@/*.ybc
 @moduledir@/*.pm
+%if %suse_version <= 1020
+/opt/kde3
+%endif
