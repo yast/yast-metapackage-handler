@@ -1,28 +1,37 @@
-<bw:metapackage xmlns:bw='http://suse.benjiweber.co.uk' xmlns='http://suse.benjiweber.co.uk'>
-	<repos>
-		<repo recommended="true">
-			<name>Packman</name>
-			<summary>This is a large community repository.</summary>
-			<description>Packman contains newer versions of many packages, as well as packages with legal issues associated with their distribution in the united states.</description>
-			<url>http://packman.iu-bremen.de/suse/10.2/</url>
-		</repo>
-		<repo recommended="false">
-			<name>Another</name>
-			<summary>Blah blah</summary>
-			<description>Blah blah, blah blah</description>
-			<url>http://example.com/</url>
-		</repo>
-	</repos>
-	<packages>
-		<package recommended="true">
-			<name>tuxsaver</name>
-			<summary>This is a tux screensaver</summary>
-			<description>This is the description of this particular tux screensaver</description>
-		</package>
-		<package recommended="false">
-			<name>anotherpkg</name>
-			<summary>Blah blah</summary>
-			<description>Blah blah, blah blah</description>
-		</package>
-	</packages>
-</bw:metapackage>
+<metapackage xmlns:os="http://opensuse.org/Standards/One_Click_Install" xmlns="http://opensuse.org/Standards/One_Click_Install">
+	<group distversion="openSUSE 10.2">
+		<name>TuxSaver</name>
+		<summary>This is a screensaver involving tux.</summary>
+		<description>This is the summary of the Tuxsaver Package.
+			
+			I have made it unnecessarily long.
+			
+			Blah Blah Blah
+			
+			-- ChangeLog --
+			
+			Some changes here.
+		</description>
+		<remainSubscribed>false</remainSubscribed>
+		
+		<repositories>
+			<repository>
+				<name>Packman</name>
+				<summary>This repository contains 3rd party packages.</summary>
+				<description>This repository contains 3rd party packages.
+					
+					Many of which cannot be distributed by SUSE/Novell for legal reasons.
+				</description>
+				<url>http://packman.iu-bremen.de/suse/10.2</url>
+				<url score="5" location="de">http://packman.iu-bremen.de/suse/10.2</url>
+			</repository>
+		</repositories>
+		<software>
+			<item>
+				<name>tuxsaver</name>
+				<summary>This is a screensaver involving tux.</summary>
+				<description>A screensaver starring tux.</description>
+			</item>
+		</software>
+	</group>
+</metapackage>
