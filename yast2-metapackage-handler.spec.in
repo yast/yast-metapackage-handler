@@ -43,9 +43,9 @@ Summary:			YaST2 MetaPackage Parser
 mkdir -p $RPM_BUILD_ROOT/opt/kde3/share/applnk/.hidden/
 mkdir -p $RPM_BUILD_ROOT/opt/kde3/share/mimelnk/text/
 chmod -R 0755 $RPM_BUILD_ROOT/opt/kde3
-install -m 0644 kdeymp.desktop \
+install -m 0644 src/kdeymp.desktop \
 	$RPM_BUILD_ROOT/opt/kde3/share/applnk/.hidden/
-install -m 0644 x-suse-ymp.desktop \
+install -m 0644 src/x-suse-ymp.desktop \
 	$RPM_BUILD_ROOT/opt/kde3/share/mimelnk/text/
 %endif
 
