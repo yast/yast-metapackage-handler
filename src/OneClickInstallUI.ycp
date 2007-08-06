@@ -26,7 +26,7 @@
 	if (substring(metaPackageUrl,0,1) != "/")
 	{
 		string newUrl = (string)SCR::Read (.target.tmpdir) + SEPARATOR + "metapackage.xml";
-		if (substring(metaPackageUrl,0,4) == "http")
+		if (substring(metaPackageUrl,0,4) == "http" || substring(metaPackageUrl,0,4) == "file")
 		{
 			map response = HTTP::Get(metaPackageUrl,newUrl);
 			if (response["code"]:400 >= 400)
