@@ -4,6 +4,7 @@
 
 	list<string> args = (list<string>)WFM::Args();
 	string urlurl = args[0]:"";
+	string INVALID_CHARS = "\n";
 	string url = (string)SCR::Read(.target.string,urlurl);
-	WFM::call("OneClickInstallUI",[url]);
+	WFM::call("OneClickInstallUI",[deletechars(url,INVALID_CHARS)]);
 }

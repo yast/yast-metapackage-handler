@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
-Mon Aug  6 12:35:11 CEST 2007 - mvidner@suse.cz
+Mon Aug  6 12:36:11 CEST 2007 - mvidner@suse.cz
 
+- Delete newlines before processing URL (benji).
 - Handle file: URLs (benji).
 - Updated the tuxsaver example.
 
