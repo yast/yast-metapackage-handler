@@ -34,4 +34,40 @@
 			</item>
 		</software>
 	</group>
+	<!-- this is duplicated for 10.3, with just distversion and urls changed -->
+	<group distversion="openSUSE 10.3">
+		<name>TuxSaver</name>
+		<summary>This is a screensaver involving tux.</summary>
+		<description>This is the summary of the Tuxsaver Package.
+			
+			I have made it unnecessarily long.
+			
+			Blah Blah Blah
+			
+			-- ChangeLog --
+			
+			Some changes here.
+		</description>
+		<remainSubscribed>false</remainSubscribed>
+		
+		<repositories>
+			<repository>
+				<name>Packman</name>
+				<summary>This repository contains 3rd party packages.</summary>
+				<description>This repository contains 3rd party packages.
+					
+					Many of which cannot be distributed by SUSE/Novell for legal reasons.
+				</description>
+				<url>http://packman.iu-bremen.de/suse/10.3</url>
+				<url score="5" location="de">http://packman.iu-bremen.de/suse/10.3</url>
+			</repository>
+		</repositories>
+		<software>
+			<item>
+				<name>tuxsaver</name>
+				<summary>This is a screensaver involving tux.</summary>
+				<description>A screensaver starring tux.</description>
+			</item>
+		</software>
+	</group>
 </metapackage>

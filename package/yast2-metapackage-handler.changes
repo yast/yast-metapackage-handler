@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Aug  6 16:39:26 CEST 2007 - mvidner@suse.cz
+
+- Added 10.3 to the tuxsaver example.
+- 0.5.2
+
+-------------------------------------------------------------------
 Mon Aug  6 12:36:11 CEST 2007 - mvidner@suse.cz
 
 - Delete newlines before processing URL (benji).
