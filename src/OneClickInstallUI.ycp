@@ -53,14 +53,14 @@
 	string REPOSITORY_DESCRIPTION_HEADING = _("Repository Description:");
 	string SOFTWARE_DESCRIPTION_HEADING = _("Package Description:");
 	string REPOSITORY_HEADING = _("Additional Software Repositories");
-	string SOFTWARE_HEADING = _("Software to be installed");
+	string SOFTWARE_HEADING = _("Software to be Installed");
 	string REMOVE_HEADING = _("Software to be Removed");
-	string PLEASE_WAIT = _("Please wait patiently while this software is installed.");
+	string PLEASE_WAIT = _("Please wait while this software is being installed.");
 	string INSTALLATION_HEADING = _("Software installation");
-	string HELP1 = _("This wizard will install software onto your computer");
-	string HELP2 = _("See http://en.opensuse.org/MetaPackages for more information");
+	string HELP1 = _("This wizard will install software onto your computer.");
+	string HELP2 = _("See http://en.opensuse.org/MetaPackages for more information.");
 	string WARNING = _("Warning:");
-	string WARNING1 = _("If you choose to continue the following changes will be made to your system");
+	string WARNING1 = _("If you choose to continue, the following changes will be made to your system");
 	string REPOSITORY_SUMMARY = _("The following repositories will be subscribed to:");
 	string SOFTWARE_SUMMARY = _("The following software items will be installed:");
 	string REMOVE_SUMMARY = _("The following software items will be REMOVED:");
@@ -74,7 +74,7 @@
 	string WILL_NOT_REMAIN_SUBSCRIBED = _("These repositories will only be added during installation, you will not remain subscribed.");
 	string NB = _("Note:");
 	string NOTHING = _("There is nothing to do.");
-	string REQUIRE_ADVANCED = _("Advanced mode, with ability to change settings.");
+	string REQUIRE_ADVANCED = _("Advanced mode with ability to change settings.");
 	string SPLASH_HEADING = _("Welcome");
 	// %1: software package
 	string WIZARD_DESCRIPTION = _("This wizard will install <b>%1</b> onto your computer.");

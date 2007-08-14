@@ -206,7 +206,7 @@
 	if (!success)
 	{
 		OneClickInstallWorkerResponse::SetFailureStage("Adding Repositories");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to subscribe to the required repositories. Please review the yast2 logs for more information"));
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to subscribe to the required repositories. Please review the yast2 logs for more information."));
 	}
 
 	//Remove any removals
@@ -217,7 +217,7 @@
 	if (!success)
 	{
 		OneClickInstallWorkerResponse::SetFailureStage("Removing Packages");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to remove the specified packages. Please review the yast2 logs for more information"));
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to remove the specified packages. Please review the yast2 logs for more information."));
 	}
 
 	//if that was successful now try and install the patterns
@@ -228,7 +228,7 @@
 	if (!success)
 	{
 		OneClickInstallWorkerResponse::SetFailureStage("Installing Patterns");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified patterns. Please review the yast2 logs for more information"));
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified patterns. Please review the yast2 logs for more information."));
 	}
 
 	//if that was successful now try and install the packages
@@ -239,7 +239,7 @@
 	if (!success)
 	{
 		OneClickInstallWorkerResponse::SetFailureStage("Installing Packages");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified packages. Please review the yast2 logs for more information"));
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified packages. Please review the yast2 logs for more information."));
 	}
 
 	//If we don't want to remain subscribed, remove the repositories that were added for installation.
@@ -250,7 +250,7 @@
 	if (!success)
 	{
 		OneClickInstallWorkerResponse::SetFailureStage("Removing temporarily installed repositories.");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to unsubscribe from the repositories that were used to perform the installation. You can remove them manually in YaST > Installation Sources. Please review the yast2 logs for more information"));
+		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to unsubscribe from the repositories that were used to perform the installation. You can remove them manually in YaST > Software Repositories. Please review the yast2 logs for more information."));
 	}
 
 	OneClickInstallWorkerResponse::SetSuccess(success);
@@ -258,7 +258,7 @@
 	if (success)
 	{
 		OneClickInstallWorkerResponse::SetFailureStage("No Failure");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("No error occurred"));
+		OneClickInstallWorkerResponse::SetErrorMessage(_("No error occurred."));
 	}
 
 	//Overwrite the information we were passed with our response back to the UI.
