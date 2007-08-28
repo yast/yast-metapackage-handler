@@ -308,6 +308,15 @@
 				$["id": "nothing", "widget":nothing]
 			];
 	}
+	
+	//Don't display simple mode if not appropriate
+	if (!OneClickInstall::HaveAnythingToDo() || !OneClickInstall::HaveBundleDescription() || !OneClickInstall::HaveAnyRecommended())
+	{
+		installation_steps = installation_steps_advanced;
+		installation_widgets = installation_widgets_advanced;
+	}
+	
+
 	/** </region> **/
 
 	/** <region name="wizardy bits"> **/
@@ -576,7 +585,16 @@
 			string communication_file =(string)SCR::Read (.target.tmpdir) + SEPARATOR + "oneclickinstall.xml";
 			OneClickInstall::ToXML(communication_file);
 
-			integer ret = (integer)SCR::Execute (.target.bash, SU_CMD + " '/sbin/yast2 OneClickInstallWorker " + communication_file + "'");
+			//Check if we are already root #305354
+			map out = (map) SCR::Execute (.target.bash_output, "/usr/bin/id --user");
+			boolean root = out["stdout"]:"" == "0\n";
+			if(root)
+			{
+				WFM::call("OneClickInstallWorker",[communication_file]);
+			} else
+			{
+				integer ret = (integer)SCR::Execute (.target.bash, SU_CMD + " '/sbin/yast2 OneClickInstallWorker " + communication_file + "'");
+			}
 			
 			//Load the response.
 			OneClickInstallWorkerResponse::FromXML(communication_file);

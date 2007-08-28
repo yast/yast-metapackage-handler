@@ -656,6 +656,54 @@
 	}
 	
 	/**
+	 * @return Whether we have anything to do
+	 * Determine whether we have a proper metapackage, useful as we can't throw exceptions.
+	**/
+	global boolean HaveAnythingToDo()
+	{
+		return ((size(repositories) > 0) && (size(software) > 0));
+	}
+
+	/**
+	 * @return Whether we have a bundle description for the whole bundle
+	 * Build service isn't currently generating one for YMPs for individual packages.
+	**/
+	global boolean HaveBundleDescription()
+	{
+		return ((description != "") && (summary != "") && ( name != ""));
+	}
+
+	/**
+	 * @return Whether we have any recommended repositories or packages
+	 * If not we will have to show advanced view.
+	**/
+	global boolean HaveAnyRecommended()
+	{
+		boolean rec = false;
+		foreach (string name, map<string,string> softwareDetails, software,
+		{
+			if (
+				(softwareDetails["action"]:"install" == "install") && 
+				(softwareDetails["recommended"]:"false" == "true")
+			)
+			rec = true;
+			return true;
+		});
+		foreach (string url, map<string,string> repoDetails, repositories,
+		{
+			if (
+			(repoDetails["recommended"]:"false" == "true")
+				)
+			{
+				rec = true;
+				return true;
+			}
+		});
+		return rec;
+	}
+
+
+	/**
 	 * Converts our map -> map structure to a list of maps with a "key" element.
 	 * This is friendly for yast's XML serialisation support.
 	**/
