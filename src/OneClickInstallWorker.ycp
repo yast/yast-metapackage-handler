@@ -8,6 +8,13 @@
     import "PackageCallbacks";
 	import "SourceManager";
 	import "Progress";
+
+	boolean FuzzyMatch(string one, string two)
+	{
+		string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"; 
+		return (tolower(filterchars(one,chars)) == tolower(filterchars(two,chars)));
+	}
+
 	/**
 	 ** Check whether this repository is already subscribed
 	 **/
@@ -15,21 +22,32 @@
 	{
 		list<integer> sources = Pkg::SourceStartCache(true);
 
-		list<string> existingSources = [];
 		list<string> deduped = [];
-		foreach (integer value, sources, 
-		{
-			string url = Pkg::SourceMediaData(value)["url"]:"Error";
 
-			existingSources = add(existingSources,url);
-		});
-
-		foreach(string new, url_list,
+		foreach (string new, url_list,
 		{
-			if (!contains(existingSources,new))
+			boolean dupeFound = false;
+			foreach (integer srcid, sources, 
 			{
+				map<string,any> repoData = Pkg::SourceGeneralData(srcid);
+				if (repoData["url"]:"" == new)
+				{
+					dupeFound = true;
+					break;
+				} 
+				if (FuzzyMatch(repoData["name"]:"",OneClickInstall::GetRepositoryName(new)))
+				{
+					dupeFound = true;
+					break;
+				}
+				if (FuzzyMatch(repoData["alias"]:"",OneClickInstall::GetRepositoryName(new)))
+				{
+					dupeFound = true;
+					break;
+				}
+			});
+			if (!dupeFound)
 				deduped = add(deduped,new);
-			}
 		});
 
 		return deduped;
@@ -48,8 +66,17 @@
 			boolean again = true;
 			while(again)
 			{
-				integer srcid = Pkg::SourceCreate(new_url, "/");
-				if (srcid == -1)
+				map<string,any> repoData = 
+					$[
+						"enabled":true,
+						"autorefresh":true,
+						"name":OneClickInstall::GetRepositoryName(new_url),
+						"alias":OneClickInstall::GetRepositoryName(new_url),
+						"base_urls":[new_url]
+					];
+				integer srcid = Pkg::RepositoryAdd(repoData);
+				boolean success = Pkg::SourceRefreshNow(srcid);
+				if (!success)
 				{
 					if (Popup::YesNo (_("An error occurred while creating the installation source.") + "\n"	+ _("Details:") + "\n" + Pkg::LastError() + "\n" + _("Try again?")))
 					{
@@ -65,11 +92,11 @@
 				else
 				{
 					sourceids = add(sourceids,srcid);
-					// enable and save the source
-					Pkg::SourceSetEnabled(srcid, true);
+					// save the repository
 					Pkg::SourceSaveAll();
 					again = false;
 				}
+
 			}
 		});
 		return true;
@@ -81,6 +108,7 @@
 	 **/
 	boolean installPackages(list<string> packages)
 	{
+		Pkg::SourceLoad();
 		foreach (string name, packages,
 		{
 			if (!Pkg::PkgInstall(name))
