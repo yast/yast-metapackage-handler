@@ -1,4 +1,16 @@
 -------------------------------------------------------------------
+Thu Aug 30 11:01:27 CEST 2007 - mvidner@suse.cz
+
+- Do not add duplicate repositories (#300974). Also uses correct
+  name when adding repositories. This change breaks compatibility
+  with 10.2.
+- Fixed a failure when run as root (#305354).
+- Fixed bad appearance when using YMPs with no description or for
+  the wrong distribution.
+  (all by benji)
+- 0.6.0
+
+-------------------------------------------------------------------
 Tue Aug 14 16:54:48 CEST 2007 - jsuchome@suse.cz
 
 - Merged proofread texts 
