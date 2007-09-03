@@ -379,15 +379,14 @@
 	{
 		UI::OpenDialog(`opt(`defaultsize ),
 			`Wizard(`opt(`stepsEnabled),
-				`back,  "&Back",
-				`abort, "Ab&ort",
-				`next,  "&Next" ) );
-	
-		UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/theme/SuSELinux/icons/22x22/apps/user_add.png" ) );
-		UI::WizardCommand(`SetDialogHeading( "Software Installation" ) );
+				`back, Label::BackButton(),
+				`abort, Label::AbortButton(),
+				`next,  Label::NextButton() ) );
+
+		UI::WizardCommand(`SetDialogHeading( INSTALLATION_HEADING ) );
 		UI::WizardCommand(`SetHelpText( HELP_TEXT ) );
 		
-		UI::WizardCommand(`AddStepHeading( "Installation Steps" ) );
+		UI::WizardCommand(`AddStepHeading( _("Installation Steps") ) );
 		
 		foreach ( map step,installation_steps, ``{
 			UI::WizardCommand(`AddStep( step["label"]:"", step["id"]:"" ) );
