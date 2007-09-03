@@ -4,11 +4,11 @@ Encoding=UTF-8
 Name=YaST Meta Package Handler
 GenericName=Meta Package Handler
 Comment=Install packages without manually adding repositories
-Exec=/sbin/OneClickInstallUI %f
+Exec=/sbin/OneClickInstallUrlHandler %f
 Terminal=false
 MultipleArgs=false
 Type=Application
-MimeType=text/x-suse-ymp
+MimeType=text/x-suse-ymu
 Categories=SystemSetup
 # thx Beineri
 Hidden=True

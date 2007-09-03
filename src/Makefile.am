@@ -20,7 +20,7 @@ mime_DATA = yast2-metapackage-handler-mimetypes.xml
 
 # overrides devtools
 desktopdir = $(datadir)/applications
-desktop_DATA = yast2-metapackage-handler.desktop
+desktop_DATA = yast2-metapackage-handler.desktop yast2-metapackage-handler-ymu.desktop
 
 EXTRA_DIST = $(client_DATA) $(module_DATA) $(old_distro_Data) $(mime_DATA) $(desktop_DATA)
 
