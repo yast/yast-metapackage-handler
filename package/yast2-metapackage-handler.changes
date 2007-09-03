@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Sep  3 14:16:44 CEST 2007 - mvidner@suse.cz
+
+- Added associations for Firefox, via shared-mime-info (#295677).
+- 0.7.0
+
+-------------------------------------------------------------------
 Thu Aug 30 11:01:27 CEST 2007 - mvidner@suse.cz
 
 - Do not add duplicate repositories (#300974). Also uses correct

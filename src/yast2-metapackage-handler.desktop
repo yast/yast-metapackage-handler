@@ -1,0 +1,14 @@
+# to ${PREFIX-~/.local}/share/applications
+[Desktop Entry]
+Encoding=UTF-8
+Name=YaST Meta Package Handler
+GenericName=Meta Package Handler
+Comment=Install packages without manually adding repositories
+# TODO also create desktop for ymu
+Exec=/sbin/OneClickInstallUI %f
+Terminal=false
+MultipleArgs=false
+Type=Application
+Icon=YaST
+Categories=Application;Network
+MimeType=text/x-suse-ymp
