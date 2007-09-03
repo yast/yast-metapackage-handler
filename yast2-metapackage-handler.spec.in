@@ -54,6 +54,7 @@ install -m 0644 src/x-suse-ymp.desktop \
 %files
 %defattr(-,root,root)
 %doc @docdir@
+/sbin/OneClickInstallUI
 /sbin/OneClickInstallUrlHandler
 %dir @clientdir@
 @clientdir@/*.ycp
