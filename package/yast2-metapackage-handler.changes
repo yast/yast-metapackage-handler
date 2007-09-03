@@ -2,6 +2,7 @@
 Mon Sep  3 14:16:44 CEST 2007 - mvidner@suse.cz
 
 - Added associations for Firefox, via shared-mime-info (#295677).
+- Use translations for buttons and heading (benji).
 - 0.7.0
 
 -------------------------------------------------------------------
