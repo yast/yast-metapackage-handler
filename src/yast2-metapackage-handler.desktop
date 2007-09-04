@@ -11,5 +11,5 @@ Type=Application
 MimeType=text/x-suse-ymp
 Categories=SystemSetup
 # thx Beineri
-Hidden=True
+NoDisplay=true
 X-KDE-StartupNotify=false

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Sep  4 10:06:32 CEST 2007 - stbinner@suse.de
+
+- .desktop files have to contain NoDisplay=true, not Hidden=true
+
+-------------------------------------------------------------------
 Mon Sep  3 14:16:44 CEST 2007 - mvidner@suse.cz
 
 - Added associations for Firefox, via shared-mime-info (#295677).
