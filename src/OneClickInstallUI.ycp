@@ -702,11 +702,11 @@
 		symbol button = nil;
 		repeat
 		{
-			button = (symbol) Wizard::UserInput();
+			button = (symbol) UI::UserInput();
 			handle_input(button);
 
 		} until ((button != `repositoriesCheckList) && (button != `softwareCheckList));
-		if ( button == `abort )
+		if ( button == `abort || button == `cancel)
 			break;
 
 		if ( button == `next || button == `back )
