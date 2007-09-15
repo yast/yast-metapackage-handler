@@ -141,6 +141,7 @@
 	 **/
 	boolean installPatterns(list<string> patterns)
 	{
+		Pkg::TargetInit( "/", false );
 		foreach (string name, patterns,
 		{
 			if (!Pkg::ResolvableInstall(name,`pattern))
@@ -148,7 +149,7 @@
 		});
 
 		boolean state = true;
-		Pkg::TargetInit( "/", false );
+
 		if(Pkg::PkgSolve(true))	
 		{
 			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
@@ -173,15 +174,14 @@
 	 **/
 	boolean removePackages(list<string> packages)
 	{
+		Pkg::TargetInit( "/", false );
 		boolean result = true;
 		foreach (string name, packages,
 		{
-			if (Pkg::IsProvided (name))
-				result = Pkg::PkgDelete(name);
+			result = Pkg::PkgDelete(name);
 		});
 
 		boolean state = true;
-		Pkg::TargetInit( "/", false );
 		if(Pkg::PkgSolve(true))	
 		{
 			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
