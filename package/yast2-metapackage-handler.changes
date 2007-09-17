@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Sep 17 08:39:14 CEST 2007 - mvidner@suse.cz
+
+- Fixed broken pattern installing and package removal (#FIXME).
+- Fixed the close button (#309146). (both benji)
+- 0.7.1
+
+-------------------------------------------------------------------
 Tue Sep  4 10:06:32 CEST 2007 - stbinner@suse.de
 
 - .desktop files have to contain NoDisplay=true, not Hidden=true
