@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
 Mon Sep 17 08:39:14 CEST 2007 - mvidner@suse.cz
 
-- Fixed broken pattern installing and package removal (#FIXME).
+- Fixed broken pattern installing and package removal (#325600).
 - Fixed the close button (#309146). (both benji)
 - 0.7.1
 
