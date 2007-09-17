@@ -227,10 +227,11 @@
 	boolean success = true;
 
 	//try and add the repositories
-	if (OneClickInstall::HaveRepositoriesToInstall())
-	{
+	//run this anyway so that source cache is initialised.
+	//if (OneClickInstall::HaveRepositoriesToInstall())
+	//{
 		success = addRepositories(OneClickInstall::GetRequiredRepositories());
-	}
+	//}
 	if (!success)
 	{
 		OneClickInstallWorkerResponse::SetFailureStage("Adding Repositories");
