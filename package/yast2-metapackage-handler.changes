@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Oct  4 15:34:25 CEST 2007 - mvidner@suse.cz
+
+- Use an actual icon (sw_single) for the YaST windows instead of the
+  default one (#329644).
+- 0.7.2
+
+-------------------------------------------------------------------
 Mon Sep 17 08:39:14 CEST 2007 - mvidner@suse.cz
 
 - Fixed broken pattern installing and package removal (#325600).

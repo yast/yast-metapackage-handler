@@ -383,6 +383,7 @@
 				`abort, Label::AbortButton(),
 				`next,  Label::NextButton() ) );
 
+		Wizard::SetDesktopIcon("sw_single"); // #329644
 		UI::WizardCommand(`SetDialogHeading( INSTALLATION_HEADING ) );
 		UI::WizardCommand(`SetHelpText( HELP_TEXT ) );
 		
