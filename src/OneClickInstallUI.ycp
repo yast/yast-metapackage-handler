@@ -425,6 +425,7 @@
 		}
 
 		UI::ReplaceWidget(`id(`contents),(installation_widgets[ no ]:$[])["widget"]:nothing);
+		Wizard::SetTitleIcon ("yast-software");
 	
 		UI::WizardCommand(`SetCurrentStep( current_id ) );
 		if (is_viewing_splash(no))
