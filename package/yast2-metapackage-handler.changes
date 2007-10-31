@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Oct  31 10:40:00 GMT 2007 - benji.weber@gmail.com
+
+- Allow package names that are not valid XML element names e.g. 3ddiag (#331557)
+- Alter default error message to indicate most likely cause for failure - user didn't enter password (#310813)
+-------------------------------------------------------------------
 Thu Oct  4 15:34:25 CEST 2007 - mvidner@suse.cz
 
 - Use an actual icon (sw_single) for the YaST windows instead of the
