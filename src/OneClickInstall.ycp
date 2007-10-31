@@ -757,7 +757,7 @@
 	{
 		SetupXML();
 		map<string,any > toSerialise = $[];
-		toSerialise = add(toSerialise,"software",software);
+		toSerialise = add(toSerialise,"software",makeXMLFriendly(software));
 		toSerialise = add(toSerialise,"repositories",makeXMLFriendly(repositories));
 		toSerialise = add(toSerialise,"remainSubscribed",remainSubscribed);
 		toSerialise = add(toSerialise,"name",name);
@@ -775,7 +775,7 @@
 	{
 		SetupXML();
 		map<string,any> deSerialised = (map<string,any >)XML::XMLToYCPFile(filename);
-		software = deSerialised["software"]:$[];
+		software = fromXMLFriendly((list<map<string,string> >)deSerialised["software"]:[]);
 		repositories = fromXMLFriendly((list<map<string,string> >)deSerialised["repositories"]:[]);
 		remainSubscribed = deSerialised["remainSubscribed"]:false;
 		summary = deSerialised["summary"]:"";
