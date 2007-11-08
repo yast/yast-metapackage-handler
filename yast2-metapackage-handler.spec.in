@@ -55,6 +55,18 @@ install -m 0644 src/x-suse-ymp.desktop \
 
 @CLEAN@
 
+%post
+# #330352, SuSEconfig.desktop-file-utils only calls
+# update-desktop-database
+if test -x usr/bin/update-mime-database ; then
+  usr/bin/update-mime-database usr/share/mime >/dev/null
+fi
+
+%postun
+if test -x usr/bin/update-mime-database ; then
+  usr/bin/update-mime-database usr/share/mime >/dev/null
+fi
+
 %files
 %defattr(-,root,root)
 %doc @docdir@

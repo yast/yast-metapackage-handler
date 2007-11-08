@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Nov  8 15:15:51 CET 2007 - mvidner@suse.cz
+
+- Fixed missing association by calling update-mime-database (#330352).
+- 0.7.3
+
+-------------------------------------------------------------------
 Thu Oct  31 10:40:00 GMT 2007 - benji.weber@gmail.com
 
 - Allow package names that are not valid XML element names e.g. 3ddiag (#331557)
