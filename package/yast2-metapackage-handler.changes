@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Nov 19 17:02:49 CET 2007 - locilka@suse.cz
+
+- Fixed used terminology (repositories) (FATE #302970).
+
+-------------------------------------------------------------------
 Thu Nov  8 15:15:51 CET 2007 - mvidner@suse.cz
 
 - Fixed missing association by calling update-mime-database (#330352).

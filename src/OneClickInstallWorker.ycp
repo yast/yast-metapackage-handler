@@ -78,7 +78,7 @@
 				boolean success = Pkg::SourceRefreshNow(srcid);
 				if (!success)
 				{
-					if (Popup::YesNo (_("An error occurred while creating the installation source.") + "\n"	+ _("Details:") + "\n" + Pkg::LastError() + "\n" + _("Try again?")))
+					if (Popup::YesNo (_("An error occurred while initializing the software repository.") + "\n"	+ _("Details:") + "\n" + Pkg::LastError() + "\n" + _("Try again?")))
 					{
 						new_url = editUrl (new_url);
 					}
