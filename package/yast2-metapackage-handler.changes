@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Nov 27 13:00:00 GMT 2007 - benji.weber@gmail.com
+
+- Catch errors caused by invalid XML. (341840)
+- Fall back to xdg_menu_su on xdg_su failure.
+
+-------------------------------------------------------------------
 Mon Nov 19 17:02:49 CET 2007 - locilka@suse.cz
 
 - Fixed used terminology (repositories) (FATE #302970).
