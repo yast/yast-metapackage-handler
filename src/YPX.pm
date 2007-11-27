@@ -5,36 +5,65 @@ package YPX;
 #use Data::Dumper;
 use XML::XPath;
 use XML::XPath::XMLParser;
+use YaST::YCP;
 
 our %TYPEINFO;
 
 BEGIN { $TYPEINFO{Load} = ["function","any","string"]; }
-
 sub Load
 {
-	my ($package,$url) = @_;
-	return XML::XPath->new(filename => $url);
+	my $xml_result;
+	#try
+	eval
+	{
+		my ($package,$url) = @_;
+		$xml_result = XML::XPath->new(filename => $url);
+	};
+	#catch (Throwable t)
+	if ($@)
+	{
+		return YaST::YCP::Boolean(0);
+	};
+	return $xml_result;
 }
 
 BEGIN { $TYPEINFO{SelectValue} = ["function","string","any","string"]; }
 sub SelectValue
 {
-	my ($package,$xp,$xpath) = @_;
-	my $value = $xp->getNodeText($xpath)->value();
-	return $value;
+	my $xml_result;
+	#try
+	eval
+	{
+		my ($package,$xp,$xpath) = @_;
+		$xml_result = $xp->getNodeText($xpath)->value();
+	};
+	#catch (Throwable t)
+	if ($@)
+	{
+		return;
+	};
+	return $xml_result;
 }
 
 BEGIN { $TYPEINFO{SelectValues} = ["function",["list","string"],"any","string"]; }
 sub SelectValues
 {
-	my ($package,$xp,$xpath) = @_;
-	my $nodes = $xp->findnodes($xpath);
-	my $values = [];
-    foreach my $node ($nodes->get_nodelist) {
-		push(@$values,$node->string_value());
-    }
-
-	return $values;
+	my $xml_result = [];
+	#try
+	eval
+	{
+		my ($package,$xp,$xpath) = @_;
+		my $nodes = $xp->findnodes($xpath);
+		foreach my $node ($nodes->get_nodelist) {
+			push(@$xml_result,$node->string_value());
+		}
+	};
+	#catch (Throwable t)
+	if ($@)
+	{
+		return;
+	};
+	return $xml_result;
 }
 
 

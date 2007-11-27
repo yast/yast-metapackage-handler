@@ -14,6 +14,8 @@
 	list args = WFM::Args();
 
 	string SU_CMD = "xdg-su -c";
+	integer SU_CMD_FAILURE_CODE = 3;
+	string FALLBACK_SU_CMD = "xdg_menu_su";
 	string SEPARATOR = "/";
 
 	string metaPackageUrl = "http://opensuse.org/repos.ymp";
@@ -74,6 +76,7 @@
 	string WILL_NOT_REMAIN_SUBSCRIBED = _("These repositories will only be added during installation, you will not remain subscribed.");
 	string NB = _("Note:");
 	string NOTHING = _("There is nothing to do.");
+	string NOTHING_EXPLANATION = _("The 'one click install' link you used was probably malformed, please report this to the author.") ;
 	string REQUIRE_ADVANCED = _("Advanced mode with ability to change settings.");
 	string SPLASH_HEADING = _("Welcome");
 	// %1: software package
@@ -139,7 +142,8 @@
 
 	term nothing = `VBox
 	(
-		`Heading(NOTHING)
+		`Heading(NOTHING),
+		`RichText(NOTHING_EXPLANATION)
 	);
 
     term confirm = `HBox(
@@ -595,6 +599,8 @@
 			} else
 			{
 				integer ret = (integer)SCR::Execute (.target.bash, SU_CMD + " '/sbin/yast2 OneClickInstallWorker " + communication_file + "'");
+				if (ret == SU_CMD_FAILURE_CODE)
+					ret = (integer)SCR::Execute (.target.bash, FALLBACK_SU_CMD + " '/sbin/yast2 OneClickInstallWorker " + communication_file + "'");
 			}
 			
 			//Load the response.

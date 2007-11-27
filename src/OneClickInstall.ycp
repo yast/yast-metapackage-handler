@@ -89,6 +89,9 @@
 	{
 		//Load the XML from file.
 		any xml = YPX::Load(url);
+		//Load returns false on error
+		if (xml == false)
+			return;
 
 		//Try and load the name.
 		name = YPX::SelectValue(xml,"/metapackage/group[@distversion='" + Product::name + "']/name");
