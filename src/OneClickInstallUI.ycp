@@ -381,16 +381,10 @@
 
 	define void SetupWizard()
 	{
-		UI::OpenDialog(`opt(`defaultsize ),
-			`Wizard(`opt(`stepsEnabled),
-				`back, Label::BackButton(),
-				`abort, Label::AbortButton(),
-				`next,  Label::NextButton() ) );
-
+		Wizard::OpenNextBackStepsDialog();
 		Wizard::SetDesktopIcon("sw_single"); // #329644
-		UI::WizardCommand(`SetDialogHeading( INSTALLATION_HEADING ) );
-		UI::WizardCommand(`SetHelpText( HELP_TEXT ) );
-		
+		Wizard::SetContents (INSTALLATION_HEADING, `Empty(), HELP_TEXT, true, true);
+
 		UI::WizardCommand(`AddStepHeading( _("Installation Steps") ) );
 		
 		foreach ( map step,installation_steps, ``{
