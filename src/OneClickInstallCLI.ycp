@@ -1,0 +1,201 @@
+/*
+ * Command line interface for One Click Install
+ */
+{
+	textdomain "OneClickInstall";
+	
+	import "OneClickInstall";
+	import "OneClickInstallWorkerFunctions";
+	import "CommandLine";
+	import "HTTP";
+	import "FTP";
+
+	
+
+
+	boolean PrepareInstall(string ympFile, string tempFile)
+	{
+		OneClickInstall::Load(ympFile);
+
+		if (!OneClickInstall::HaveAnythingToDo())
+		{
+			y2error("Nothing to do specified in the YMP file");
+			CommandLine::Print(_("Error: Nothing to do specified in the YMP file"));
+			return false;
+		}
+
+		if (OneClickInstall::HaveRepositories())
+		{
+			CommandLine::Print(_("If you choose to continue, the following repositories will be subscribed to:"));
+			foreach (string repository, OneClickInstall::GetRequiredRepositories(),
+			{
+				CommandLine::Print("\t* " + repository);
+			});
+		}
+		
+
+		if (OneClickInstall::HaveSoftware())
+		{
+			CommandLine::Print(_("If you choose to continue, the following software packages will be installed:"));
+			foreach (string software, OneClickInstall::GetRequiredSoftware(),
+			{
+				CommandLine::Print("\t* " + software);
+			});
+		}
+
+		OneClickInstall::ToXML(tempFile);
+		return true;
+	}
+
+	boolean PrepareInstallHandler(map<string,string> options)
+	{
+		//trick ncurses
+		string url = options["url"]:"";
+		string tempFile = options["targetfile"]:"";
+		if (substring(url,0,1) != "/")
+			url = OneClickInstallWorkerFunctions::GrabFile(url);
+
+		if (url == nil)
+		{
+			y2error ("Unable to retrieve YMP at %1",options["url"]:"");
+			CommandLine::Print(sformat(_("Unable to retrieve YMP at %1"),options["url"]:""));
+			return false;
+		}
+
+		return PrepareInstall(url,tempFile);
+	}
+
+	boolean DoInstall(string xmlfile)
+	{
+		OneClickInstall::FromXML(xmlfile);
+
+		if (OneClickInstall::HaveRepositoriesToInstall())
+			CommandLine::Print(_("Adding Repositories..."));
+
+		boolean success = OneClickInstallWorkerFunctions::AddRepositories(OneClickInstall::GetRequiredRepositories());
+
+		if (!success)
+		{
+			y2error("Unable to add repositories");
+			CommandLine::Print(_("Error: Unable to add respositories"));
+			return false;
+		}
+	
+		//Remove any removals
+		if (OneClickInstall::HaveRemovalsToInstall())
+		{
+			CommandLine::Print(_("Removing Packages..."));
+			success = OneClickInstallWorkerFunctions::RemovePackages(OneClickInstall::GetRequiredRemoveSoftware());
+		}
+		if (!success)
+		{
+			y2error("Unable to remove packages");
+			CommandLine::Print(_("Error: Unable to remove packages"));
+			return false;
+		}
+	
+		//if that was successful now try and install the patterns
+		if (OneClickInstall::HavePatternsToInstall())
+		{
+			CommandLine::Print(_("Installing Patterns..."));
+			success = OneClickInstallWorkerFunctions::InstallPatterns(OneClickInstall::GetRequiredPatterns());
+		}
+		if (!success)
+		{
+			y2error("Unable to install patterns");
+			CommandLine::Print(_("Error: Unable to install patterns"));
+			return false;
+		}
+	
+		//if that was successful now try and install the packages
+		if (OneClickInstall::HavePackagesToInstall())
+		{
+			CommandLine::Print(_("Installing Packages..."));
+			success = OneClickInstallWorkerFunctions::InstallPackages(OneClickInstall::GetRequiredPackages());
+		}
+		if (!success)
+		{
+			y2error("Unable to install packages");
+			CommandLine::Print(_("Error: Unable to install packages"));
+			return false;
+		}
+	
+		//If we don't want to remain subscribed, remove the repositories that were added for installation.
+		if (OneClickInstall::HaveRepositoriesToInstall() && !OneClickInstall::GetRemainSubscribed())
+		{
+			success = OneClickInstallWorkerFunctions::RemoveAddedRepositories();
+		}
+		if (!success)
+		{
+			y2error("Unable to remove temporarily added repositories");
+			CommandLine::Print(_("Warning: Unable to remove temporarily added repositories."));
+			return false;
+		}
+		CommandLine::Print(_("Finished"));
+		return true;
+	}
+
+	boolean AmRoot()
+	{
+		map out = (map) SCR::Execute (.target.bash_output, "/usr/bin/id --user");
+		return out["stdout"]:"" == "0\n";
+	}
+
+	boolean DoInstallHandler(map<string,string> options)
+	{
+		
+		if ( AmRoot() )
+			return DoInstall(options["instructionsfile"]:"");
+		else
+		{
+			y2error("Cannot install software as limited user");
+			CommandLine::Print(_("Error: Must be root"));
+			return false;
+		}
+	}
+
+	map cmdline = 
+	$[
+		"help" : _("One Click Install Command Line Installer"),
+		"id"   : "OneClickInstall",
+		"actions" : 
+		$[
+			"prepareinstall" :
+				$[
+					"help"    : _("Processes a YMP file, ready for installation"),
+					"handler" : PrepareInstallHandler
+				],
+			"doinstall" :
+				$[
+					"help"    : _("Processes a YMP file, ready for installation"),
+					"handler" : DoInstallHandler
+				]
+		],
+		"options" :
+		$[
+			"url" :
+				$[
+					"help" : _("URL of .ymp file"),
+					"type" : "string"
+				],
+			"targetfile" :
+				$[
+					"help" : _("File to put internal representation of YMP into"),
+					"type" : "string"
+				],
+			"instructionsfile" :
+				$[
+					"help" : _("File containing internal representation of One Click Install instructions"),
+					"type" : "string"
+				]
+		],
+		"mappings" :
+		$[
+			"prepareinstall" : [ "url" , "targetfile" ],
+			"doinstall"      : [ "instructionsfile" ]
+		]
+	];
+	
+	any ret = CommandLine::Run(cmdline);
+	return ret;
+}
