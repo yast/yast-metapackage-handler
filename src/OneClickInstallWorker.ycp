@@ -3,214 +3,12 @@
 
 	import "OneClickInstall";
 	import "OneClickInstallWorkerResponse";
+	import "OneClickInstallWorkerFunctions";
 	import "Popup";
 	include "packager/inst_source_dialogs.ycp";
     import "PackageCallbacks";
 	import "SourceManager";
 	import "Progress";
-
-	boolean FuzzyMatch(string one, string two)
-	{
-		string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"; 
-		return (tolower(filterchars(one,chars)) == tolower(filterchars(two,chars)));
-	}
-
-	/**
-	 ** Check whether this repository is already subscribed
-	 **/
-	list<string> DeDupe(list<string> url_list)
-	{
-		list<integer> sources = Pkg::SourceStartCache(true);
-
-		list<string> deduped = [];
-
-		foreach (string new, url_list,
-		{
-			boolean dupeFound = false;
-			foreach (integer srcid, sources, 
-			{
-				map<string,any> repoData = Pkg::SourceGeneralData(srcid);
-				if (repoData["url"]:"" == new)
-				{
-					dupeFound = true;
-					break;
-				} 
-				if (FuzzyMatch(repoData["name"]:"",OneClickInstall::GetRepositoryName(new)))
-				{
-					dupeFound = true;
-					break;
-				}
-				if (FuzzyMatch(repoData["alias"]:"",OneClickInstall::GetRepositoryName(new)))
-				{
-					dupeFound = true;
-					break;
-				}
-			});
-			if (!dupeFound)
-				deduped = add(deduped,new);
-		});
-
-		return deduped;
-	}
-
-	list<integer> sourceids = [];
-	/**
-	 ** Subscribe to all the specified repositories
-	 ** return true if all catalogues were added successfully, false otherwise.
-	 **/
-	boolean addRepositories(list<string> repositories)
-	{
-		list<string> dedupedRepos = DeDupe(repositories);
-		foreach (string new_url, dedupedRepos,
-		{
-			boolean again = true;
-			while(again)
-			{
-				map<string,any> repoData = 
-					$[
-						"enabled":true,
-						"autorefresh":true,
-						"name":OneClickInstall::GetRepositoryName(new_url),
-						"alias":OneClickInstall::GetRepositoryName(new_url),
-						"base_urls":[new_url]
-					];
-				integer srcid = Pkg::RepositoryAdd(repoData);
-				boolean success = Pkg::SourceRefreshNow(srcid);
-				if (!success)
-				{
-					if (Popup::YesNo (_("An error occurred while initializing the software repository.") + "\n"	+ _("Details:") + "\n" + Pkg::LastError() + "\n" + _("Try again?")))
-					{
-						new_url = editUrl (new_url);
-					}
-					else
-					{
-						OneClickInstallWorkerResponse::AddFailedRepository(new_url);
-						again = false;
-						return false;
-					}
-				}
-				else
-				{
-					sourceids = add(sourceids,srcid);
-					// save the repository
-					Pkg::SourceSaveAll();
-					again = false;
-				}
-
-			}
-		});
-		return true;
-	}
-
-	/**
-	 ** Install all the specified packages
-	 ** return true if all installations were successful, false otherwise
-	 **/
-	boolean installPackages(list<string> packages)
-	{
-		Pkg::SourceLoad();
-		foreach (string name, packages,
-		{
-			if (!Pkg::PkgInstall(name))
-				OneClickInstallWorkerResponse::AddFailedPackage(name);
-		});
-
-		boolean state = true;
-		Pkg::TargetInit( "/", false );
-		if(Pkg::PkgSolve(true))	
-		{
-			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
-		} else //xxx no callback for resolve failures
-		{
-			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
-			if (result == `accept)
-			{
-				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
-			} else
-			{
-				state = false;
-			}
-		}
-
-		return state;
-    }
-
-	/**
-	 ** Install all the specified patterns
-	 ** return true if all installations were successful, false otherwise
-	 **/
-	boolean installPatterns(list<string> patterns)
-	{
-		Pkg::TargetInit( "/", false );
-		foreach (string name, patterns,
-		{
-			if (!Pkg::ResolvableInstall(name,`pattern))
-				OneClickInstallWorkerResponse::AddFailedPattern(name);
-		});
-
-		boolean state = true;
-
-		if(Pkg::PkgSolve(true))	
-		{
-			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
-		} else //xxx no callback for resolve failures
-		{
-			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
-			if (result == `accept)
-			{
-				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
-			} else
-			{
-				state = false;
-			}
-		}
-
-		return state;
-    }
-
-	/**
-	 ** Remove all the specified packages
-	 ** return true if all installations were successful, false otherwise
-	 **/
-	boolean removePackages(list<string> packages)
-	{
-		Pkg::TargetInit( "/", false );
-		boolean result = true;
-		foreach (string name, packages,
-		{
-			result = Pkg::PkgDelete(name);
-		});
-
-		boolean state = true;
-		if(Pkg::PkgSolve(true))	
-		{
-			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
-		} else //xxx no callback for resolve failures
-		{
-			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
-			if (result == `accept)
-			{
-				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
-			} else
-			{
-				state = false;
-			}
-		}
-
-		return state;
-    }
-
-	boolean removeAddedRepositories()
-	{
-		boolean success = true;
-		foreach(integer srcid, sourceids, 
-			{
-				success = success && Pkg::SourceDelete(srcid);
-			}
-		);
-		Pkg::SourceSaveAll();
-		return success;
-	}
 
 	//Get the catalogues to add and packages to install from the arguments
 
@@ -230,7 +28,7 @@
 	//run this anyway so that source cache is initialised.
 	//if (OneClickInstall::HaveRepositoriesToInstall())
 	//{
-		success = addRepositories(OneClickInstall::GetRequiredRepositories());
+		success = OneClickInstallWorkerFunctions::AddRepositories(OneClickInstall::GetRequiredRepositories());
 	//}
 	if (!success)
 	{
@@ -241,7 +39,7 @@
 	//Remove any removals
 	if (success && OneClickInstall::HaveRemovalsToInstall())
 	{
-		success = removePackages(OneClickInstall::GetRequiredRemoveSoftware());
+		success = OneClickInstallWorkerFunctions::RemovePackages(OneClickInstall::GetRequiredRemoveSoftware());
 	}
 	if (!success)
 	{
@@ -252,7 +50,7 @@
 	//if that was successful now try and install the patterns
 	if (success && OneClickInstall::HavePatternsToInstall())
 	{
-		success = installPatterns(OneClickInstall::GetRequiredPatterns());
+		success = OneClickInstallWorkerFunctions::InstallPatterns(OneClickInstall::GetRequiredPatterns());
 	}
 	if (!success)
 	{
@@ -263,7 +61,7 @@
 	//if that was successful now try and install the packages
 	if (success && OneClickInstall::HavePackagesToInstall())
 	{
-		success = installPackages(OneClickInstall::GetRequiredPackages());
+		success = OneClickInstallWorkerFunctions::InstallPackages(OneClickInstall::GetRequiredPackages());
 	}
 	if (!success)
 	{
@@ -274,7 +72,7 @@
 	//If we don't want to remain subscribed, remove the repositories that were added for installation.
 	if (OneClickInstall::HaveRepositoriesToInstall() && !OneClickInstall::GetRemainSubscribed())
 	{
-		success = removeAddedRepositories();
+		success = OneClickInstallWorkerFunctions::RemoveAddedRepositories();
 	}
 	if (!success)
 	{

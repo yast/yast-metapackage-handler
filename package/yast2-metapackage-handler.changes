@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Tue Mar 18 17:00:00 GMT 2008 - benji@opensuse.org
+
+- Command line Support.
+- Move dialogues out of main file to reduce size.
+- Refactor workflow so both UI and CLI can use it.
+- UI tweaks, including:
+- Don't show this again support for nag warning.
+- Removed "advanced mode" tickbox in favour of an editable proposal.
+- YMP description visible in detailed mode too.
+
+-------------------------------------------------------------------
 Tue Nov 27 13:00:00 GMT 2007 - benji.weber@gmail.com
 
 - Catch errors caused by invalid XML. (341840)

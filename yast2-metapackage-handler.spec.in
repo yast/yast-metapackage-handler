@@ -72,6 +72,7 @@ fi
 %doc @docdir@
 /sbin/OneClickInstallUI
 /sbin/OneClickInstallUrlHandler
+/sbin/OCICLI
 %dir @clientdir@
 @clientdir@/*.ycp
 %dir @moduledir@

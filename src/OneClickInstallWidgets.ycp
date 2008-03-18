@@ -1,0 +1,451 @@
+{
+	/**
+	 * Store the UI terms used in One Click Install client.
+	 */
+	module "OneClickInstallWidgets";
+	textdomain "OneClickInstall";
+
+	import "Label";
+
+	string SPACER = "                                                                    ";
+
+	term repositoriesUI = `VBox
+	(
+		`VWeight(2,
+					`Heading(_("Additional Software Repositories"))
+				),
+		`VWeight(10,
+					`MultiSelectionBox(`id(`repositoriesCheckList),`opt(`notify), _("Select the software repositories you wish to subscribe to:"), [SPACER])
+				),
+		`VWeight(1,
+					`CheckBox(`id(`remain),_("Remain subscribed to these repositories after installation"),true)	
+				),
+		`VWeight(5,
+					`RichText(`id(`descrLabel),"")
+				)	
+	);
+
+
+	term softwareUI = `VBox
+	(
+		`VWeight(2,
+					`Heading(_("Software to be Installed"))
+				),
+		`VWeight(10,
+					`MultiSelectionBox(`id(`softwareCheckList),`opt(`notify), _("Select the software components you wish to install:"), [SPACER])
+				),
+		`VWeight(5,
+					`RichText(`id(`packageDescrLabel),"")
+				)	
+	
+	);
+
+	term removeUI = `VBox
+	(
+		`VWeight(2,
+					`Heading(_("Software to be Removed"))
+				),
+		`VWeight(10,
+					`MultiSelectionBox(`id(`removeCheckList),`opt(`notify), _("Select the software components you wish to remove:"), [SPACER])
+				),
+		`VWeight(5,
+					`RichText(`id(`removeDescrLabel),"")
+				)
+	);
+
+	term nothing = `VBox
+	(
+		`Heading(_("Installation not possible")),
+		`RichText(_("The install link/file you opened does not contain instructions for this version of openSUSE."))
+	);
+
+
+
+    term perform = `HBox(
+	`HSpacing(1),
+	`VBox(
+	    `VSpacing(0.2),
+	    `Heading( _("Please wait while this software is being installed.")),
+	    `VSpacing(0.2)
+	    ),
+	`HSpacing(1)
+    );
+
+	define list<term> StringListToTermList(list<string> strList,boolean checked)
+	{
+		list<term> items = [];
+		foreach(string str, strList,
+		{
+			items = add(items,`item(`id(str),str,checked));
+		});
+		return items;
+	}
+
+
+	//This wouldn't be necessary if regexpsub wasn't so retarded.
+	define string NewLinesToRichText(string original)
+	{
+		string result = "";
+		list<string> lines = splitstring(original,"\n");
+		foreach(string line, lines,
+		{
+			result = result + line + "<br/>";
+		});
+		return result;
+	}
+
+	global term GetRepositorySelectionUI()
+	{
+		return repositoriesUI;
+	}
+
+	global void PopulateRepositorySelectionUIDescription(string description)
+	{
+		UI::ChangeWidget(`descrLabel, `Value,"<body bgcolor=\"White\"><h3>" + _("Repository Description:") + "</h3>" + NewLinesToRichText(description) + "</body>");
+	}
+
+	global void PopulateRepositorySelectionUI(string description,list<string> requiredRepos, list<string> nonRequiredRepos, boolean remainSubscribed)
+	{
+		UI::ChangeWidget(`id(`remain),`Value,remainSubscribed);
+		list<term> newRepositoryNames = (list<term>) merge
+		(
+			StringListToTermList(requiredRepos,true),
+			StringListToTermList(nonRequiredRepos,false)
+		);
+		UI::ChangeWidget(`id(`repositoriesCheckList),`Items,
+			newRepositoryNames
+		);
+		PopulateRepositorySelectionUIDescription(description);
+	}
+
+	global string GetCurrentlySelectedRepository()
+	{
+		return (string) UI::QueryWidget( `id(`repositoriesCheckList), `CurrentItem );
+	}
+
+	global list<string> GetRepositorySelectionItems()
+	{
+		return (list<string>)UI::QueryWidget(`id(`repositoriesCheckList), `SelectedItems);
+	}
+
+	global boolean GetRepositoryRemainSubscribed()
+	{
+		return (boolean)UI::QueryWidget(`id(`remain), `Value);
+	}
+
+	global term GetSoftwareSelectionUI()
+	{
+		return softwareUI;
+	}
+
+	global void PopulateSoftwareSelectionUIDescription(string description)
+	{
+		UI::ChangeWidget(`packageDescrLabel, `Value,"<body bgcolor=\"White\"><h3>" + _("Package Description:") + "</h3>" + NewLinesToRichText(description) + "</body>");
+	}
+
+	global void PopulateSoftwareSelectionUI(string description,list<string> requiredSW, list<string> nonRequiredSW)
+	{
+		list<term> newSoftwareNames = (list<term>) merge
+		(
+			StringListToTermList(requiredSW,true),
+			StringListToTermList(nonRequiredSW,false)
+		);
+		UI::ChangeWidget(`id(`softwareCheckList),`Items,
+			newSoftwareNames
+		);
+		PopulateSoftwareSelectionUIDescription(description);
+	}
+
+	global string GetCurrentlySelectedSoftware()
+	{
+		return (string) UI::QueryWidget( `id(`softwareCheckList), `CurrentItem );
+	}
+
+	global list<string> GetSoftwareSelectionItems()
+	{
+		return (list<string>)UI::QueryWidget(`id(`softwareCheckList), `SelectedItems);
+	}
+
+	global term GetSoftwareRemovalSelectionUI()
+	{
+		return removeUI;
+	}
+
+	global void PopulateSoftwareRemovalSelectionUIDescription(string description)
+	{
+		UI::ChangeWidget(`removeDescrLabel, `Value,"<body bgcolor=\"White\"><h3>" + _("Package Description:") + "</h3>" + NewLinesToRichText(description) + "</body>");
+	}
+
+	global void PopulateSoftwareRemovalSelectionUI(string description, list<string> requiredRemovals, list<string> nonRequiredRemovals)
+	{
+		list<term> newSoftwareNames = (list<term>) merge
+		(
+			StringListToTermList(requiredRemovals,true),
+			StringListToTermList(nonRequiredRemovals,false)
+		);
+		UI::ChangeWidget(`id(`removeCheckList),`Items,
+			newSoftwareNames
+		);
+
+		PopulateSoftwareRemovalSelectionUIDescription(description);
+	}
+
+	global string GetCurrentlySelectedRemoval()
+	{
+		return (string) UI::QueryWidget( `id(`removeCheckList), `CurrentItem );
+	}
+
+
+	global list<string> GetSoftwareRemovalSelectionItems()
+	{
+		return (list<string>)UI::QueryWidget(`id(`removeCheckList), `SelectedItems);
+	}
+
+	global term GetIncompatibleYMPUI()
+	{
+		return nothing;
+	}
+
+	boolean canRead = false;
+	global boolean GetCanRead()
+	{
+		return canRead;
+	}
+
+	global boolean ConfirmUI()
+	{
+		UI::OpenDialog(
+			`HBox(
+				`HSpacing(1),
+				`VBox(
+					`VSpacing(0.2),
+					`VBox(
+					
+						`Left (`Heading(Label::WarningMsg())),
+						`HCenter(`Label( _("Have you reviewed the changes that will be made to your system?\n(Malicious packages could damage your system.)") )),
+					`VSpacing(0.4),
+					`Left(`CheckBox(`id(`iCanRead),`opt(`notify,`immediate),_("Don't ask me this again"))),
+					`VSpacing(0.2)
+					),
+					`HBox(
+								`HStretch (),
+								`HWeight( 1, 
+									`PushButton
+									( 
+										`id(`yes),
+										`opt (`key_F10),
+										"Yes"
+									)
+								),
+								`HSpacing(2),
+								`HWeight( 1, 
+									`PushButton( 
+										`id(`no),
+										`opt(`default, `key_F9),
+										"No"
+									) 
+								),
+								`HStretch ()
+					),
+					`VSpacing(0.2)
+					),
+				`HSpacing(1)
+				)
+		);
+		any ret = UI::UserInput();
+		while ((ret != `yes) && (ret != `no))
+		{
+			if (ret == `iCanRead)
+			{
+				UI::ChangeWidget(`no,`Enabled, !((boolean)UI::QueryWidget(`iCanRead,`Value)));
+			}
+			ret = UI::UserInput();
+		}
+		canRead = (boolean)UI::QueryWidget(`iCanRead,`Value);
+		UI::CloseDialog();
+		return ret == `yes;
+	}
+
+	string getProposalString(list<string> repositories, list<string> packages,  list<string> removals, boolean remainSubscribed)
+	{
+			string repoStr = "";
+			string packageStr = "";
+			string removeStr = "";
+			foreach (string repo, repositories, 
+				{
+					repoStr = repoStr + "<li>" + repo + "</li>";
+				}
+			);
+			
+			foreach (string package, packages, 
+				{
+					packageStr = packageStr + "<li>" + package + "</li>";
+				}
+			);
+
+			foreach (string package, removals, 
+				{
+					removeStr = removeStr + "<li>" + package + "</li>";
+				}
+			);
+
+			string tempOrPerm = "";
+			if ( !remainSubscribed)
+			{
+				tempOrPerm = _("These repositories will only be added during installation, you will not remain subscribed.");
+			} else
+			{
+				tempOrPerm = _("You will remain subscribed to these repositories after installation.");
+			}
+
+			string summaryStr = "<body bgcolor=\"White\">" +
+				"<font color='red'>" + _("If you choose to continue, the following changes will be made to your system") + "</font>";
+
+			//Put remove message at top, incase people try to push it off the bottom of the warning by adding lots of packages.
+			if (removeStr != "")
+			{
+				summaryStr = summaryStr +"<h2><font color='red'>" + _("Software to be REMOVED:") + "</font></h2>" +
+				removeStr;
+			}
+
+			if (repoStr != "")
+			{
+				summaryStr = summaryStr + "<h2>" + _("Repositories to be added:") +"</h2>" +
+				repoStr + "<h3>" + _("Note:") + "</h3>" +
+				"<li>" + tempOrPerm + "</li>";
+			}
+
+			if (packageStr != "")
+			{
+				summaryStr = summaryStr + "<h2>" + _("Software to be installed:") + "</h2>" +
+				packageStr;
+			}
+
+
+			summaryStr = summaryStr + "</body>";
+			return summaryStr;
+	}
+
+
+	global term GetProposalUI()
+	{
+		return `HBox(
+					`VBox(
+						`VSpacing(0.5),
+						`Left(`Heading(_("Proposal"))),
+						`VWeight(5,
+								`RichText(`id(`summary),"")
+						),
+						`HBox(`Right(`PushButton(`id(`alterProposal),_("Customise"))))
+					)
+						
+				);
+	}
+
+	global void PopulateProposalUI(list<string> repositories, list<string> packages, list<string> removals, boolean remainSubscribed)
+	{
+		string proposal = getProposalString(repositories,packages,removals,remainSubscribed);
+		UI::ChangeWidget(`id(`summary),`Value,proposal);
+	}
+
+	global term GetDescriptionUI()
+	{
+		return
+			`HBox(
+				`VBox(
+					`VSpacing(0.5),
+					`ReplacePoint(`id(`head),`Empty()),
+					`VSpacing(0.5),
+					`VWeight(5,
+							`RichText(`id(`splashMessage),"")
+					)
+				)
+			);
+	}
+
+	global void PopulateDescriptionUI(string name, string summary, string description)
+	{
+		UI::ReplaceWidget(`id(`head),`Left(`HBox(`Heading(name),`Label(summary))));
+		UI::ChangeWidget(`id(`splashMessage),`Value,"<body bgcolor=\"White\"><p>" + NewLinesToRichText(description) + "</p></body>");
+	}
+
+	global term GetPerformingUI()
+	{
+		return perform;
+	}
+
+	global term GetResultUI()
+	{
+		return `HBox(
+			`HSpacing(1),
+			`VBox(
+				`VSpacing(0.1),
+				`RichText(`id(`resultLabel),""),
+				`VSpacing(0.2)
+				),
+			`HSpacing(1)
+		);
+	}
+
+	global void PopulateResultUI(boolean success, list<string> failedRepositories, list<string> failedPatterns, list<string> failedPackages, string failureStage, string errorMessage, string note)
+	{
+			string statusStr = "<body bgcolor=\"White\"><h1>" + _("Software installation") + "</h1>";
+
+			if (success)
+			{
+				if (
+					(size(failedRepositories) == 0) &&
+					(size(failedPatterns) == 0 ) &&
+					(size(failedPackages) == 0 )
+					)
+				{
+					statusStr = statusStr + "<p>" + _("Installation was successful") + "</p>";
+				} 
+				else
+				{
+					statusStr = statusStr + "<p>" + _("Installation was only partially successful.") + "</p>";
+				}
+			} else
+			{
+				statusStr = statusStr + "<p>" + _("Unfortunately the installation has failed, see the log file at /var/log/YaST2/y2log for more information. Failure stage was: ") + " " + failureStage + "<p>";
+				statusStr = statusStr + "<h2>"+ _("Error Message") + "</h2><p>" + errorMessage + "</p>";
+			}
+
+			if (size(failedRepositories) > 0 )
+			{
+				statusStr = statusStr + "<h3>" + _("The following repositories could not be added") + "</h3><p>";
+				foreach (string failed, failedRepositories,
+				{
+					statusStr = statusStr + "<li>" + failed + "</li>";
+				});
+				statusStr = statusStr + "</p>";
+			}
+
+			if (size(failedPatterns) > 0 )
+			{
+				statusStr = statusStr + "<h3>" + _("The following patterns could not be installed") + "</h3><p>";
+				foreach (string failed, failedPatterns,
+				{
+					statusStr = statusStr + "<li>" + failed + "</li>";
+				});
+				statusStr = statusStr + "</p>";
+			}
+
+			if (size(failedPackages) > 0 )
+			{
+				statusStr = statusStr + "<h3>" + _("The following packages could not be installed") + "</h3><p>";
+				foreach (string failed, failedPackages,
+				{
+					statusStr = statusStr + "<li>" + failed + "</li>";
+				});
+				statusStr = statusStr + "</p>";
+			}
+
+			statusStr = statusStr + "<p>" + note + "</p>";
+
+			statusStr = statusStr + "</body>";
+
+			UI::ChangeWidget(`resultLabel, `Value, statusStr);
+	}
+
+}

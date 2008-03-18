@@ -2,16 +2,24 @@
 client_DATA = \
 	OneClickInstallUI.ycp \
 	OneClickInstallWorker.ycp \
-	OneClickInstallUrlHandler.ycp
+	OneClickInstallUrlHandler.ycp \
+	OneClickInstallCLI.ycp
 
 module_DATA = \
 	OneClickInstall.ycp \
 	OneClickInstallWorkerResponse.ycp \
+	OneClickInstallWorkerFunctions.ycp \
+	OneClickInstallWidgets.ycp \
+	UserSettings.ycp \
 	YPX.pm
 
-dist_sbin_SCRIPTS = OneClickInstallUrlHandler
+dist_sbin_SCRIPTS = \
+	OneClickInstallUrlHandler \
+	OneClickInstallCLI
+
 install-exec-hook:
-	$(LN_S) OneClickInstallUrlHandler $(DESTDIR)$(sbindir)/OneClickInstallUI
+	$(LN_S) OneClickInstallUrlHandler $(DESTDIR)$(sbindir)/OneClickInstallUI 
+	$(LN_S) OneClickInstallCLI $(DESTDIR)$(sbindir)/OCICLI
 
 old_distro_Data = kdeymp.desktop x-suse-ymp.desktop
 
