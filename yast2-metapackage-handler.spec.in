@@ -14,6 +14,8 @@ BuildRequires:	perl-XML-XPath
 BuildRequires:	yast2
 BuildRequires:	yast2-country
 BuildRequires:	yast2-installation
+BuildRequires:	yast2-transfer
+BuildRequires:	yast2-packager
 # desktop files
 BuildRequires:	update-desktop-files
 
