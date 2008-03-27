@@ -77,7 +77,7 @@
 		if (!success)
 		{
 			y2error("Unable to add repositories");
-			CommandLine::Print(_("Error: Unable to add respositories"));
+			CommandLine::Print(_("Error: Unable to add repositories"));
 			return false;
 		}
 	
