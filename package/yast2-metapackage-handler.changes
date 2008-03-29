@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sat Mar 29 12:00:00 GMT 2008 - benji@opensuse.org
+
+- Fix error stage reporting.
+- Switch to slideshow for installation progress, instead of popups.
+
+-------------------------------------------------------------------
 Tue Mar 18 17:00:00 GMT 2008 - benji@opensuse.org
 
 - Command line Support.

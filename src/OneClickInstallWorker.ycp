@@ -7,6 +7,9 @@
 	import "Popup";
 	include "packager/inst_source_dialogs.ycp";
     import "PackageCallbacks";
+	import "SlideShow";
+	import "SlideShowCallbacks";
+	import "PackageInstallation";
 	import "SourceManager";
 	import "Progress";
 
@@ -23,61 +26,73 @@
 	OneClickInstall::FromXML(xmlFileName);
 
 	boolean success = true;
-
-	//try and add the repositories
-	//run this anyway so that source cache is initialised.
-	//if (OneClickInstall::HaveRepositoriesToInstall())
-	//{
-		success = OneClickInstallWorkerFunctions::AddRepositories(OneClickInstall::GetRequiredRepositories());
-	//}
+	
+	success = OneClickInstallWorkerFunctions::AddRepositories(OneClickInstall::GetRequiredRepositories());
+	
 	if (!success)
 	{
 		OneClickInstallWorkerResponse::SetFailureStage("Adding Repositories");
 		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to subscribe to the required repositories. Please review the yast2 logs for more information."));
 	}
 
-	//Remove any removals
-	if (success && OneClickInstall::HaveRemovalsToInstall())
-	{
-		success = OneClickInstallWorkerFunctions::RemovePackages(OneClickInstall::GetRequiredRemoveSoftware());
-	}
-	if (!success)
-	{
-		OneClickInstallWorkerResponse::SetFailureStage("Removing Packages");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to remove the specified packages. Please review the yast2 logs for more information."));
-	}
 
-	//if that was successful now try and install the patterns
-	if (success && OneClickInstall::HavePatternsToInstall())
+	if (success)
 	{
-		success = OneClickInstallWorkerFunctions::InstallPatterns(OneClickInstall::GetRequiredPatterns());
-	}
-	if (!success)
-	{
-		OneClickInstallWorkerResponse::SetFailureStage("Installing Patterns");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified patterns. Please review the yast2 logs for more information."));
-	}
+		SlideShow::SetLanguage (UI::GetLanguage(true));
+		SlideShow::InitPkgData(true);
+		SlideShow::OpenSlideShowDialog();
+		PackageInstallation::CommitPackages(0,0);
 
-	//if that was successful now try and install the packages
-	if (success && OneClickInstall::HavePackagesToInstall())
-	{
-		success = OneClickInstallWorkerFunctions::InstallPackages(OneClickInstall::GetRequiredPackages());
-	}
-	if (!success)
-	{
-		OneClickInstallWorkerResponse::SetFailureStage("Installing Packages");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified packages. Please review the yast2 logs for more information."));
+		//Remove any removals
+		if (success && OneClickInstall::HaveRemovalsToInstall())
+		{
+			success = OneClickInstallWorkerFunctions::RemovePackages(OneClickInstall::GetRequiredRemoveSoftware());
+			
+			if (!success)
+			{
+				OneClickInstallWorkerResponse::SetFailureStage("Removing Packages");
+				OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to remove the specified packages. Please review the yast2 logs for more information."));
+			}
+		}
+		
+	
+		//if that was successful now try and install the patterns
+		if (success && OneClickInstall::HavePatternsToInstall())
+		{
+			success = OneClickInstallWorkerFunctions::InstallPatterns(OneClickInstall::GetRequiredPatterns());
+			
+			if (!success)
+			{
+				OneClickInstallWorkerResponse::SetFailureStage("Installing Patterns");
+				OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified patterns. Please review the yast2 logs for more information."));
+			}
+		}
+	
+	
+		//if that was successful now try and install the packages
+		if (success && OneClickInstall::HavePackagesToInstall())
+		{
+			success = OneClickInstallWorkerFunctions::InstallPackages(OneClickInstall::GetRequiredPackages());
+			if (!success)
+			{
+				OneClickInstallWorkerResponse::SetFailureStage("Installing Packages");
+				OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to install the specified packages. Please review the yast2 logs for more information."));
+			}
+		}
+	
+		SlideShow::CloseSlideShowDialog();
+
 	}
 
 	//If we don't want to remain subscribed, remove the repositories that were added for installation.
 	if (OneClickInstall::HaveRepositoriesToInstall() && !OneClickInstall::GetRemainSubscribed())
 	{
 		success = OneClickInstallWorkerFunctions::RemoveAddedRepositories();
-	}
-	if (!success)
-	{
-		OneClickInstallWorkerResponse::SetFailureStage("Removing temporarily installed repositories.");
-		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to unsubscribe from the repositories that were used to perform the installation. You can remove them manually in YaST > Software Repositories. Please review the yast2 logs for more information."));
+		if (!success)
+		{
+			OneClickInstallWorkerResponse::SetFailureStage("Removing temporarily installed repositories.");
+			OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to unsubscribe from the repositories that were used to perform the installation. You can remove them manually in YaST > Software Repositories. Please review the yast2 logs for more information."));
+		}
 	}
 
 	OneClickInstallWorkerResponse::SetSuccess(success);
