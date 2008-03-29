@@ -84,6 +84,7 @@
 	 **/
 	global boolean AddRepositories(list<string> repositories)
 	{
+		boolean addRepoSuccess = true;
 		print(_("Loading Package Management"));
 
 		list<string> dedupedRepos = DeDupe(repositories);
@@ -113,6 +114,7 @@
 					{
 						OneClickInstallWorkerResponse::AddFailedRepository(new_url);
 						again = false;
+						addRepoSuccess = false;
 						return false;
 					}
 				}
@@ -126,7 +128,7 @@
 
 			}
 		});
-		return true;
+		return addRepoSuccess;
 	}
 
 	/**
