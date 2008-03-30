@@ -19,6 +19,8 @@ BuildRequires:	yast2-packager
 # desktop files
 BuildRequires:	update-desktop-files
 
+Patch0:	SLE.diff
+
 Requires: 	yast2-perl-bindings
 Requires:	perl-XML-XPath
 Requires:	yast2
@@ -39,6 +41,11 @@ Summary:			YaST2 MetaPackage Parser
 -
 
 @PREP@
+
+%if %suse_version <= 1020
+	%patch
+	%patch0
+%endif
 
 @BUILD@
 
