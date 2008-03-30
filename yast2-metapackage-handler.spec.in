@@ -43,8 +43,7 @@ Summary:			YaST2 MetaPackage Parser
 @PREP@
 
 %if %suse_version <= 1020
-	%patch
-	%patch0
+%patch0
 %endif
 
 @BUILD@
