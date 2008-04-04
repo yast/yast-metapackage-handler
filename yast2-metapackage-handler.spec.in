@@ -20,6 +20,7 @@ BuildRequires:	yast2-packager
 BuildRequires:	update-desktop-files
 
 Patch0:	SLE.diff
+Patch1: 103.diff
 
 Requires: 	yast2-perl-bindings
 Requires:	perl-XML-XPath
@@ -44,6 +45,10 @@ Summary:			YaST2 MetaPackage Parser
 
 %if %suse_version <= 1020
 %patch0
+%endif
+
+%if %suse_version <= 1030
+%patch1
 %endif
 
 @BUILD@

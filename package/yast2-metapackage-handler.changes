@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Apr 04 13:40:00 GMT 2008 - benji@opensuse.org
+
+- Prefer installing packages from repositories defined in the YMP.
+
+-------------------------------------------------------------------
 Sat Mar 29 12:00:00 GMT 2008 - benji@opensuse.org
 
 - Fix error stage reporting.
