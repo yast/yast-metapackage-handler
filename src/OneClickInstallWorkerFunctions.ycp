@@ -38,7 +38,7 @@
 		string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"; 
 		return (tolower(filterchars(one,chars)) == tolower(filterchars(two,chars)));
 	}
-
+	list<integer> deduped_repos = [];
 	/**
 	 ** Check whether this repository is already subscribed
 	 **/
@@ -56,16 +56,21 @@
 				map<string,any> repoData = Pkg::SourceGeneralData(srcid);
 				if (repoData["url"]:"" == new)
 				{
+				 	//keep a note of this repo, we still want to prefer packages from it
+					//to those in other repositories
+					deduped_repos = add(deduped_repos,srcid);
 					dupeFound = true;
 					break;
 				} 
 				if (FuzzyMatch(repoData["name"]:"",OneClickInstall::GetRepositoryName(new)))
 				{
+				 	deduped_repos = add(deduped_repos,srcid);
 					dupeFound = true;
 					break;
 				}
 				if (FuzzyMatch(repoData["alias"]:"",OneClickInstall::GetRepositoryName(new)))
 				{
+				 	deduped_repos = add(deduped_repos,srcid);
 					dupeFound = true;
 					break;
 				}
@@ -143,10 +148,10 @@
 			print(sformat(_("Marking package %1 for installation"),name));
 			//Prefer packages from repositories specified in the YMP
 			boolean inYmpRepos = false;
-			foreach (integer id, sourceids, 
+			foreach (integer id, (list<integer>)merge(sourceids,deduped_repos), 
 			{
 			 	y2debug("Looking for %1 in %2",name,id);
-			 	inYmpRepos = Pkg::ResolvfableInstallRepo(name,`package,id);
+			 	inYmpRepos = Pkg::ResolvableInstallRepo(name,`package,id);
 				if (inYmpRepos)
 				{
 				 	y2debug("Found %1 in %2",name,id);
