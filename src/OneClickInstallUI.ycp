@@ -335,7 +335,10 @@
 		installation_steps = installation_steps_advanced;
 		installation_widgets = installation_widgets_advanced;
 		SetupWizard();
-		current_step = size(installation_steps_advanced) - 5;
+		if (OneClickInstall::HaveBundleDescription())
+			current_step = 1;
+		else
+			current_step = 0;
 		show_step(current_step);
 	}
 

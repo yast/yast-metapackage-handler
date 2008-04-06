@@ -6,6 +6,7 @@
 	textdomain "OneClickInstall";
 
 	import "Label";
+	import "HTML";
 
 	string SPACER = "                                                                    ";
 
@@ -89,7 +90,7 @@
 		list<string> lines = splitstring(original,"\n");
 		foreach(string line, lines,
 		{
-			result = result + line + "<br/>";
+			result = result + line + HTML::Newline();
 		});
 		return result;
 	}
@@ -101,7 +102,7 @@
 
 	global void PopulateRepositorySelectionUIDescription(string description)
 	{
-		UI::ChangeWidget(`descrLabel, `Value,"<body bgcolor=\"White\"><h3>" + _("Repository Description:") + "</h3>" + NewLinesToRichText(description) + "</body>");
+		UI::ChangeWidget(`descrLabel, `Value,"<body bgcolor=\"White\">" + HTML::Heading(_("Repository Description:")) + NewLinesToRichText(description) + "</body>");
 	}
 
 	global void PopulateRepositorySelectionUI(string description,list<string> requiredRepos, list<string> nonRequiredRepos, boolean remainSubscribed)
@@ -140,7 +141,7 @@
 
 	global void PopulateSoftwareSelectionUIDescription(string description)
 	{
-		UI::ChangeWidget(`packageDescrLabel, `Value,"<body bgcolor=\"White\"><h3>" + _("Package Description:") + "</h3>" + NewLinesToRichText(description) + "</body>");
+		UI::ChangeWidget(`packageDescrLabel, `Value,"<body bgcolor=\"White\">" + HTML::Heading(_("Package Description:")) + NewLinesToRichText(description) + "</body>");
 	}
 
 	global void PopulateSoftwareSelectionUI(string description,list<string> requiredSW, list<string> nonRequiredSW)
@@ -173,7 +174,7 @@
 
 	global void PopulateSoftwareRemovalSelectionUIDescription(string description)
 	{
-		UI::ChangeWidget(`removeDescrLabel, `Value,"<body bgcolor=\"White\"><h3>" + _("Package Description:") + "</h3>" + NewLinesToRichText(description) + "</body>");
+		UI::ChangeWidget(`removeDescrLabel, `Value,"<body bgcolor=\"White\">" + HTML::Heading(_("Package Description:")) + NewLinesToRichText(description) + "</body>");
 	}
 
 	global void PopulateSoftwareRemovalSelectionUI(string description, list<string> requiredRemovals, list<string> nonRequiredRemovals)
@@ -268,26 +269,9 @@
 
 	string getProposalString(list<string> repositories, list<string> packages,  list<string> removals, boolean remainSubscribed)
 	{
-			string repoStr = "";
-			string packageStr = "";
-			string removeStr = "";
-			foreach (string repo, repositories, 
-				{
-					repoStr = repoStr + "<li>" + repo + "</li>";
-				}
-			);
-			
-			foreach (string package, packages, 
-				{
-					packageStr = packageStr + "<li>" + package + "</li>";
-				}
-			);
-
-			foreach (string package, removals, 
-				{
-					removeStr = removeStr + "<li>" + package + "</li>";
-				}
-			);
+			string repoStr = HTML::List(repositories);
+			string packageStr = HTML::List(packages);
+			string removeStr = HTML::ColoredList(removals,"red");
 
 			string tempOrPerm = "";
 			if ( !remainSubscribed)
@@ -299,25 +283,25 @@
 			}
 
 			string summaryStr = "<body bgcolor=\"White\">" +
-				"<font color='red'>" + _("If you choose to continue, the following changes will be made to your system") + "</font>";
+				HTML::Colorize(_("If you choose to continue, the following changes will be made to your system") ,"red");
 
 			//Put remove message at top, incase people try to push it off the bottom of the warning by adding lots of packages.
-			if (removeStr != "")
+			if (size(removals) > 0)
 			{
-				summaryStr = summaryStr +"<h2><font color='red'>" + _("Software to be REMOVED:") + "</font></h2>" +
+				summaryStr = summaryStr + HTML::Heading(HTML::Colorize(_("Software to be REMOVED:"),"red")) +
 				removeStr;
 			}
 
-			if (repoStr != "")
+			if (size(repositories) > 0)
 			{
-				summaryStr = summaryStr + "<h2>" + _("Repositories to be added:") +"</h2>" +
-				repoStr + "<h3>" + _("Note:") + "</h3>" +
-				"<li>" + tempOrPerm + "</li>";
+				summaryStr = summaryStr + HTML::Heading(_("Repositories to be added:")) +
+				repoStr + HTML::Bold(_("Note:")) + HTML::Newline() +
+				HTML::List([tempOrPerm]);
 			}
 
-			if (packageStr != "")
+			if (size(packages) > 0)
 			{
-				summaryStr = summaryStr + "<h2>" + _("Software to be installed:") + "</h2>" +
+				summaryStr = summaryStr + HTML::Heading( _("Software to be installed:")) +
 				packageStr;
 			}
 
@@ -366,7 +350,7 @@
 	global void PopulateDescriptionUI(string name, string summary, string description)
 	{
 		UI::ReplaceWidget(`id(`head),`Left(`HBox(`Heading(name),`Label(summary))));
-		UI::ChangeWidget(`id(`splashMessage),`Value,"<body bgcolor=\"White\"><p>" + NewLinesToRichText(description) + "</p></body>");
+		UI::ChangeWidget(`id(`splashMessage),`Value,"<body bgcolor=\"White\">" + HTML::Para( NewLinesToRichText(description)) + "</body>");
 	}
 
 	global term GetPerformingUI()
@@ -389,7 +373,7 @@
 
 	global void PopulateResultUI(boolean success, list<string> failedRepositories, list<string> failedPatterns, list<string> failedPackages, string failureStage, string errorMessage, string note)
 	{
-			string statusStr = "<body bgcolor=\"White\"><h1>" + _("Software installation") + "</h1>";
+			string statusStr = "<body bgcolor=\"White\">" + HTML::Heading(_("Software installation"));
 
 			if (success)
 			{
@@ -399,49 +383,37 @@
 					(size(failedPackages) == 0 )
 					)
 				{
-					statusStr = statusStr + "<p>" + _("Installation was successful") + "</p>";
+					statusStr = statusStr + HTML::Para(_("Installation was successful"));
 				} 
 				else
 				{
-					statusStr = statusStr + "<p>" + _("Installation was only partially successful.") + "</p>";
+					statusStr = statusStr + HTML::Para(_("Installation was only partially successful."));
 				}
 			} else
 			{
-				statusStr = statusStr + "<p>" + _("Unfortunately the installation has failed, see the log file at /var/log/YaST2/y2log for more information. Failure stage was: ") + " " + failureStage + "<p>";
-				statusStr = statusStr + "<h2>"+ _("Error Message") + "</h2><p>" + errorMessage + "</p>";
+				statusStr = statusStr + HTML::Para(_("Unfortunately the installation has failed, see the log file at /var/log/YaST2/y2log for more information. Failure stage was: ") + " " + failureStage);
+				statusStr = statusStr + HTML::Heading(_("Error Message")) + HTML::Para(errorMessage);
 			}
 
 			if (size(failedRepositories) > 0 )
 			{
-				statusStr = statusStr + "<h3>" + _("The following repositories could not be added") + "</h3><p>";
-				foreach (string failed, failedRepositories,
-				{
-					statusStr = statusStr + "<li>" + failed + "</li>";
-				});
-				statusStr = statusStr + "</p>";
+				statusStr = statusStr + HTML::Heading( _("The following repositories could not be added")) +
+					HTML::List(failedRepositories);
 			}
 
 			if (size(failedPatterns) > 0 )
 			{
-				statusStr = statusStr + "<h3>" + _("The following patterns could not be installed") + "</h3><p>";
-				foreach (string failed, failedPatterns,
-				{
-					statusStr = statusStr + "<li>" + failed + "</li>";
-				});
-				statusStr = statusStr + "</p>";
+				statusStr = statusStr + HTML::Heading( _("The following patterns could not be installed")) +
+					HTML::List(failedPatterns);
 			}
 
 			if (size(failedPackages) > 0 )
 			{
-				statusStr = statusStr + "<h3>" + _("The following packages could not be installed") + "</h3><p>";
-				foreach (string failed, failedPackages,
-				{
-					statusStr = statusStr + "<li>" + failed + "</li>";
-				});
-				statusStr = statusStr + "</p>";
+				statusStr = statusStr + HTML::Heading(_("The following packages could not be installed")) +
+					HTML::List(failedPackages);
 			}
 
-			statusStr = statusStr + "<p>" + note + "</p>";
+			statusStr = statusStr + HTML::Para(note);
 
 			statusStr = statusStr + "</body>";
 
