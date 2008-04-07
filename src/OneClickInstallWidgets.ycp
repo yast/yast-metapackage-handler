@@ -349,7 +349,7 @@
 
 	global void PopulateDescriptionUI(string name, string summary, string description)
 	{
-		UI::ReplaceWidget(`id(`head),`Left(`HBox(`Heading(name),`Label(summary))));
+		UI::ReplaceWidget(`id(`head),`VBox(`Left(`Heading(name)),`Label(summary)));
 		UI::ChangeWidget(`id(`splashMessage),`Value,"<body bgcolor=\"White\">" + HTML::Para( NewLinesToRichText(description)) + "</body>");
 	}
 
