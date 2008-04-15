@@ -57,7 +57,7 @@
 	term nothing = `VBox
 	(
 		`Heading(_("Installation not possible")),
-		`RichText(_("The install link/file you opened does not contain instructions for this version of openSUSE."))
+		`RichText(_("The install link or file you opened does not contain instructions for this version of openSUSE."))
 	);
 
 
@@ -66,7 +66,7 @@
 	`HSpacing(1),
 	`VBox(
 	    `VSpacing(0.2),
-	    `Heading( _("Please wait while this software is being installed.")),
+	    `Heading( _("Wait while this software is being installed.")),
 	    `VSpacing(0.2)
 	    ),
 	`HSpacing(1)
@@ -223,9 +223,11 @@
 					`VBox(
 					
 						`Left (`Heading(Label::WarningMsg())),
-						`HCenter(`Label( _("Have you reviewed the changes that will be made to your system?\n(Malicious packages could damage your system.)") )),
+						`HCenter(`Label( _("Have you reviewed the changes that will be made to your system?
+Malicious packages could damage your system.
+") )),
 					`VSpacing(0.4),
-					`Left(`CheckBox(`id(`iCanRead),`opt(`notify,`immediate),_("Don't ask me this again"))),
+					`Left(`CheckBox(`id(`iCanRead),`opt(`notify,`immediate),_("Do not ask me again"))),
 					`VSpacing(0.2)
 					),
 					`HBox(
@@ -276,19 +278,19 @@
 			string tempOrPerm = "";
 			if ( !remainSubscribed)
 			{
-				tempOrPerm = _("These repositories will only be added during installation, you will not remain subscribed.");
+				tempOrPerm = _("These repositories will only be added during installation. You will not remain subscribed.");
 			} else
 			{
 				tempOrPerm = _("You will remain subscribed to these repositories after installation.");
 			}
 
 			string summaryStr = "<body bgcolor=\"White\">" +
-				HTML::Colorize(_("If you choose to continue, the following changes will be made to your system") ,"red");
+				HTML::Colorize(_("If you continue, the following changes will be made to your system") ,"red");
 
 			//Put remove message at top, incase people try to push it off the bottom of the warning by adding lots of packages.
 			if (size(removals) > 0)
 			{
-				summaryStr = summaryStr + HTML::Heading(HTML::Colorize(_("Software to be REMOVED:"),"red")) +
+				summaryStr = summaryStr + HTML::Heading(HTML::Colorize(_("Software to be removed:"),"red")) +
 				removeStr;
 			}
 
@@ -349,7 +351,7 @@
 
 	global void PopulateDescriptionUI(string name, string summary, string description)
 	{
-		UI::ReplaceWidget(`id(`head),`VBox(`Left(`Heading(name)),`Label(summary)));
+		UI::ReplaceWidget(`id(`head),`VBox(`Left(`Heading(name)),`Left(`Label(summary))));
 		UI::ChangeWidget(`id(`splashMessage),`Value,"<body bgcolor=\"White\">" + HTML::Para( NewLinesToRichText(description)) + "</body>");
 	}
 
@@ -391,7 +393,7 @@
 				}
 			} else
 			{
-				statusStr = statusStr + HTML::Para(_("Unfortunately the installation has failed, see the log file at /var/log/YaST2/y2log for more information. Failure stage was: ") + " " + failureStage);
+				statusStr = statusStr + HTML::Para(_("The installation has failed. For more information, see the log file at <tt>/var/log/YaST2/y2log</tt>. Failure stage was: ") + " " + failureStage);
 				statusStr = statusStr + HTML::Heading(_("Error Message")) + HTML::Para(errorMessage);
 			}
 
