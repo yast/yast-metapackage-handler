@@ -26,7 +26,7 @@
 
 		if (OneClickInstall::HaveRepositories())
 		{
-			CommandLine::Print(_("If you choose to continue, the following repositories will be subscribed to:"));
+			CommandLine::Print(_("If you continue, the following repositories will be subscribed to:"));
 			foreach (string repository, OneClickInstall::GetRequiredRepositories(),
 			{
 				CommandLine::Print("\t* " + repository);
@@ -36,7 +36,7 @@
 
 		if (OneClickInstall::HaveSoftware())
 		{
-			CommandLine::Print(_("If you choose to continue, the following software packages will be installed:"));
+			CommandLine::Print(_("If you continue, the following software packages will be installed:"));
 			foreach (string software, OneClickInstall::GetRequiredSoftware(),
 			{
 				CommandLine::Print("\t* " + software);
@@ -185,7 +185,7 @@
 				],
 			"instructionsfile" :
 				$[
-					"help" : _("File containing internal representation of One Click Install instructions"),
+					"help" : _("File containing internal representation of <b>One Click Install</b> instructions"),
 					"type" : "string"
 				]
 		],

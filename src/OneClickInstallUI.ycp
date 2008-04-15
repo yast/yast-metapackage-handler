@@ -39,8 +39,8 @@
 
 	/** <region name="String constants"> **/
 
-	string HELP1 = _("This wizard will install software onto your computer.");
-	string HELP2 = _("See http://en.opensuse.org/MetaPackages for more information.");
+	string HELP1 = _("This wizard will install software on your computer.");
+	string HELP2 = _("See <tt>http://en.opensuse.org/One_Click_Install</tt> for more information.");
 
 	/** <region name="Define the UI components"> **/
 
@@ -181,7 +181,7 @@
 	{
 		installation_steps_advanced = 
 			[
-				$[ "id": "nothing",	"label": _("Nothing to do") ],
+				$[ "id": "nothing",	"label": _("Nothing to do.") ],
 			];
 		installation_widgets_advanced = 	
 			[

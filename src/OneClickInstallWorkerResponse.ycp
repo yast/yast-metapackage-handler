@@ -5,7 +5,7 @@
 	import "XML";
 
 	string DEFAULT_FAILURE_STAGE = _("unknown");
-	string DEFAULT_ERROR_MESSAGE = _("Administrator (root) privileges are required, either they were not supplied or an unknown error occurred.");
+	string DEFAULT_ERROR_MESSAGE = _("Root privileges are required. Either they were not supplied, or an unknown error occurred.");
 	string DEFAULT_NOTE = "";
 	string success = "false";
 	string note = DEFAULT_NOTE;
