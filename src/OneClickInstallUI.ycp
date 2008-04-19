@@ -283,6 +283,14 @@
 
     define void show_step(integer no)
     {
+		if (no == 0)
+		{	
+			Wizard::DisableBackButton();
+		} else
+		{
+			Wizard::EnableBackButton();
+		}
+
 		string current_id = (installation_steps[ no ]:nil)["id"]:"";
 		if (is_done(no))
 		{
