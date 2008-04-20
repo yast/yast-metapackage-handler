@@ -151,8 +151,14 @@
 			if (recommended != "false")
 				recommended = "true";
 
-			//Find the name of this repository
-			string name = YPX::SelectValue(xml,THIS_REPO_XPATH + "name");
+
+			//Get the name in our language
+			string name = YPX::SelectValue(xml,THIS_REPO_XPATH + "name[@lang='" + Language::language + "']");
+			//If that failed, try without a language
+			if (name == "")
+				name = YPX::SelectValue(xml,THIS_REPO_XPATH + "name[not(@lang)]");
+
+
 			//Find the summary of this repository, in our language.
 			string summary = YPX::SelectValue(xml,THIS_REPO_XPATH + "summary[@lang='"+ Language::language +"']");
 			//If that failed, try without a language.
