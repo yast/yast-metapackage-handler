@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Apr 29 15:03:04 CEST 2008 - benji@opensuse.org
+
+- Fixed duplicated Wizard steps (bnc#384492).
+- Allow translatable repository names.
+- Disabled back button when on first step of wizard.
+- 0.8.4
+
+-------------------------------------------------------------------
 Wed Apr 16 09:34:12 CEST 2008 - jsrain@suse.cz
 
 - merged texts from proofread
