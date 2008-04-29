@@ -251,7 +251,7 @@
 
 	define void SetupWizard()
 	{
-		Wizard::OpenNextBackStepsDialog();
+		UI::WizardCommand(`DeleteSteps());
 		Wizard::SetDesktopIcon("sw_single"); // #329644
 		Wizard::SetContents (sformat(_("%1 Installation"),OneClickInstall::GetName()), `Empty(), HELP_TEXT, true, true);
 
@@ -261,6 +261,7 @@
 			UI::WizardCommand(`AddStep( step["label"]:"", step["id"]:"" ) );
 		});
 	}
+	Wizard::OpenNextBackStepsDialog();
 	SetupWizard();
 
 
