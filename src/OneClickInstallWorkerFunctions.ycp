@@ -132,6 +132,8 @@
 				}
 
 			}
+			//Should be safe, definition ignores call when in command line mode or no progress is visible.
+			Progress::NextStage();
 		});
 		return addRepoSuccess;
 	}

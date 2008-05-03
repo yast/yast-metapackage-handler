@@ -12,8 +12,7 @@
 	import "PackageInstallation";
 	import "SourceManager";
 	import "Progress";
-
-	//Get the catalogues to add and packages to install from the arguments
+	import "Wizard";
 
 	list args = WFM::Args();
 		
@@ -21,9 +20,23 @@
 
 	if (xmlFileName == "")
 		return false;
+	
+	Wizard::CreateDialog();
+	Wizard::SetDesktopIcon("sw_single");
+	
 
 	//Load the xml communication from the user interface.
 	OneClickInstall::FromXML(xmlFileName);
+	
+	list<string> rurls = OneClickInstall::GetRequiredRepositories();
+	list<string> rnames = [];
+	foreach (string url, rurls, 
+	{
+		rnames = add(rnames,OneClickInstall::GetRepositoryName(url));
+	});
+	//xxx add better stage and title when not in string freeze.
+	Progress::New(_("Perform Installation"), "", 2, rnames, [], "");
+	Progress::NextStage();
 
 	boolean success = true;
 	
@@ -35,6 +48,7 @@
 		OneClickInstallWorkerResponse::SetErrorMessage(_("An error occurred while attempting to subscribe to the required repositories. Review the yast2 logs for more information."));
 	}
 
+	Progress::NextStage();
 
 	if (success)
 	{
@@ -105,5 +119,8 @@
 
 	//Overwrite the information we were passed with our response back to the UI.
 	OneClickInstallWorkerResponse::ToXML(xmlFileName);
+
+	UI::CloseDialog();
+
 	return success;
 }
