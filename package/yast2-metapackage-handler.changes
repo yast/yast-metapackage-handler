@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon May  5 16:30:47 CEST 2008 - mvidner@suse.cz
+
+- 0.8.5
+
+-------------------------------------------------------------------
 Sat May 03 11:00:00 BST 2008 - benji@opensuse.org
 
 - Fixed progress dialogue flicker when adding repositories (bnc#386383)
