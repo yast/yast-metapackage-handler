@@ -9,7 +9,7 @@ Terminal=false
 MultipleArgs=false
 Type=Application
 MimeType=text/x-suse-ymp
-Categories=SystemSetup
+Categories=Settings;System;SystemSetup
 # thx Beineri
 NoDisplay=true
 X-KDE-StartupNotify=false
