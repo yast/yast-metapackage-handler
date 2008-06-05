@@ -237,7 +237,7 @@ Malicious packages could damage your system.
 									( 
 										`id(`yes),
 										`opt (`key_F10),
-										"Yes"
+										Label::YesButton()
 									)
 								),
 								`HSpacing(2),
@@ -245,7 +245,7 @@ Malicious packages could damage your system.
 									`PushButton( 
 										`id(`no),
 										`opt(`default, `key_F9),
-										"No"
+										Label::NoButton()
 									) 
 								),
 								`HStretch ()
