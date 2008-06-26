@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jun 26 20:10:00 BST 2008 - benji@opensuse.org
+
+- Fix bnc #392257 (Back button enabled after installation)
+- Fix bnc #401885 (UI Error when no repositories added during installation)
+
+-------------------------------------------------------------------
 Fri May 16 16:40:22 CEST 2008 - jsrain@suse.cz
 
 - added categories Settings and System into desktop file

@@ -296,6 +296,8 @@
 		if (is_done(no))
 		{
 			Wizard::SetNextButton (`finish, Label::FinishButton());
+			Wizard::DisableAbortButton();
+			Wizard::DisableBackButton();
 		}
 
 		UI::ReplaceWidget(`id(`contents),(installation_widgets[ no ]:$[])["widget"]:OneClickInstallWidgets::GetIncompatibleYMPUI());

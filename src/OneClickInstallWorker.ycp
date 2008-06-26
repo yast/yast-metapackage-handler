@@ -34,6 +34,9 @@
 	{
 		rnames = add(rnames,OneClickInstall::GetRepositoryName(url));
 	});
+	if (size(rnames) == 0)
+		rnames = [_("Repositories")];
+
 	//xxx add better stage and title when not in string freeze.
 	Progress::New(_("Perform Installation"), "", 2, rnames, [], "");
 	Progress::NextStage();
