@@ -12,8 +12,7 @@ BuildRequires: yast2-core
 BuildRequires: yast2-perl-bindings
 BuildRequires:	perl-XML-XPath
 BuildRequires:	yast2
-BuildRequires:	yast2-country
-BuildRequires:	yast2-installation
+BuildRequires:	yast2-country-data
 BuildRequires:	yast2-transfer
 BuildRequires:	yast2-packager
 # desktop files
@@ -28,9 +27,7 @@ Requires:	yast2
 Requires:	yast2-packager
 Requires:	yast2-transfer
 # Language
-Requires:	yast2-country
-# Product
-Requires:	yast2-installation
+Requires:	yast2-country-data
 # needed at runtime for invoking root mode
 Requires:	/usr/bin/xdg-su
 
