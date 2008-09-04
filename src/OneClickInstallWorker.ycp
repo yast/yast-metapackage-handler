@@ -6,7 +6,7 @@
 	import "OneClickInstallWorkerFunctions";
 	import "Popup";
 	include "packager/inst_source_dialogs.ycp";
-    import "PackageCallbacks";
+	import "PackageCallbacks";
 	import "SlideShow";
 	import "SlideShowCallbacks";
 	import "PackageInstallation";
@@ -58,7 +58,19 @@
 	{
 		SlideShow::SetLanguage (UI::GetLanguage(true));
 		PackageSlideShow::InitPkgData(true);
+
+		SlideShow::Setup( 
+			[$[
+            		"name" : "packages",
+            		"description" : _("Installing Packages..."),
+            		"value" : PackageSlideShow::total_size_to_install / 1024 , // kilobytes
+            		"units" : `kb,
+        	]]);
+		SlideShow::ShowTable();
 		SlideShow::OpenDialog();
+
+		SlideShow::MoveToStage( "packages" );
+
 		PackageInstallation::CommitPackages(0,0);
 
 		//Remove any removals
