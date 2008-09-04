@@ -10,6 +10,7 @@
 	import "SlideShow";
 	import "SlideShowCallbacks";
 	import "PackageInstallation";
+	import "PackageSlideShow";
 	import "SourceManager";
 	import "Progress";
 	import "Wizard";
@@ -56,8 +57,8 @@
 	if (success)
 	{
 		SlideShow::SetLanguage (UI::GetLanguage(true));
-		SlideShow::InitPkgData(true);
-		SlideShow::OpenSlideShowDialog();
+		PackageSlideShow::InitPkgData(true);
+		SlideShow::OpenDialog();
 		PackageInstallation::CommitPackages(0,0);
 
 		//Remove any removals
@@ -97,7 +98,7 @@
 			}
 		}
 	
-		SlideShow::CloseSlideShowDialog();
+		SlideShow::CloseDialog();
 
 	}
 

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Sep  4 15:40:13 CEST 2008 - visnov@suse.cz
+
+- Adapt to SlideShow API changes 
+
+-------------------------------------------------------------------
 Mon Jul 14 13:13:05 CEST 2008 - locilka@suse.cz
 
 - Removed useless dependency on yast2-installation, fixed
