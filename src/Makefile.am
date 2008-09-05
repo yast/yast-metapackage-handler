@@ -18,8 +18,8 @@ dist_sbin_SCRIPTS = \
 	OneClickInstallCLI
 
 install-exec-hook:
-	$(LN_S) OneClickInstallUrlHandler $(DESTDIR)$(sbindir)/OneClickInstallUI 
-	$(LN_S) OneClickInstallCLI $(DESTDIR)$(sbindir)/OCICLI
+	$(LN_S) -f OneClickInstallUrlHandler $(DESTDIR)$(sbindir)/OneClickInstallUI 
+	$(LN_S) -f OneClickInstallCLI $(DESTDIR)$(sbindir)/OCICLI
 
 old_distro_Data = kdeymp.desktop x-suse-ymp.desktop
 
