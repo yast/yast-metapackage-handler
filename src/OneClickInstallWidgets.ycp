@@ -66,7 +66,7 @@
 	`HSpacing(1),
 	`VBox(
 	    `VSpacing(0.2),
-	    `Heading( _("Wait while this software is being installed.")),
+	    `Heading( _("Please wait while this software is being installed.")),
 	    `VSpacing(0.2)
 	    ),
 	`HSpacing(1)
@@ -285,7 +285,7 @@ Malicious packages could damage your system.
 			}
 
 			string summaryStr = "<body bgcolor=\"White\">" +
-				HTML::Colorize(_("If you continue, the following changes will be made to your system") ,"red");
+				HTML::Colorize(_("If you continue, the following changes will be made to your system:") ,"red");
 
 			//Put remove message at top, incase people try to push it off the bottom of the warning by adding lots of packages.
 			if (size(removals) > 0)

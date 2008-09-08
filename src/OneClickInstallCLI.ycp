@@ -26,7 +26,7 @@
 
 		if (OneClickInstall::HaveRepositories())
 		{
-			CommandLine::Print(_("If you continue, the following repositories will be subscribed to:"));
+			CommandLine::Print(_("If you continue, the following repositories will be subscribed:"));
 			foreach (string repository, OneClickInstall::GetRequiredRepositories(),
 			{
 				CommandLine::Print("\t* " + repository);
