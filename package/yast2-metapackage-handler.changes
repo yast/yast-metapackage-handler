@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Feb 12 12:31:43 CET 2009 - coolo@suse.de
+
+- make the desktop files more XDG compliant 
+- 0.8.8
+
+-------------------------------------------------------------------
 Mon Sep  8 13:08:42 CEST 2008 - mvidner@suse.cz
 
 - Applied proofreading changes from Andrew Spackman.

@@ -1,6 +1,5 @@
 # to ${PREFIX-~/.local}/share/applications
 [Desktop Entry]
-Encoding=UTF-8
 Name=YaST Meta Package Handler
 GenericName=Meta Package Handler
 Comment=Install packages without manually adding repositories
@@ -8,8 +7,8 @@ Exec=/sbin/OneClickInstallUI %f
 Terminal=false
 MultipleArgs=false
 Type=Application
-MimeType=text/x-suse-ymp
-Categories=Settings;System;SystemSetup
+MimeType=text/x-suse-ymp;
+Categories=Settings;System;SystemSetup;
 # thx Beineri
 NoDisplay=true
 X-KDE-StartupNotify=false
