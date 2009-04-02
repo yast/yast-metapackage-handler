@@ -57,7 +57,6 @@
 	if (success)
 	{
 		SlideShow::SetLanguage (UI::GetLanguage(true));
-		PackageSlideShow::InitPkgData(true);
 
 		SlideShow::Setup( 
 			[$[
