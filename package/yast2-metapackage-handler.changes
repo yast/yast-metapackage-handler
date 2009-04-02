@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Apr  2 13:57:51 CEST 2009 - lslezak@suse.cz
+
+- properly initialize package slideshow, display correct
+  installation progress (bnc#482320)
+- 0.8.9
+
+-------------------------------------------------------------------
 Thu Feb 12 12:31:43 CET 2009 - coolo@suse.de
 
 - make the desktop files more XDG compliant 
