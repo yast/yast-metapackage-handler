@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon May 25 14:57:39 CEST 2009 - mvidner@suse.cz
+
+- Added -h, --help to /sbin/OCICLI.
+
+-------------------------------------------------------------------
 Thu Apr  2 13:57:51 CEST 2009 - lslezak@suse.cz
 
 - properly initialize package slideshow, display correct
