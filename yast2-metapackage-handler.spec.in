@@ -33,7 +33,7 @@ Requires:	/usr/bin/xdg-su
 
 BuildArchitectures:	noarch
 
-Summary:			YaST2 MetaPackage Parser
+Summary:			YaST2 - Easy Installation of Add-on RPMs using Metapackages
 
 %description
 -
