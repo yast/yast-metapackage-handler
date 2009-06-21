@@ -36,7 +36,8 @@ BuildArchitectures:	noarch
 Summary:			YaST2 - Easy Installation of Add-on RPMs using Metapackages
 
 %description
--
+With this technology users can install packages and add repositories
+with a simple click on a link in a website.
 
 @PREP@
 
