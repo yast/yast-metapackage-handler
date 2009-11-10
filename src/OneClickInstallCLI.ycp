@@ -2,7 +2,7 @@
  * Command line interface for One Click Install
  */
 {
-	textdomain "OneClickInstall";
+	textdomain "oneclickinstall";
 	
 	import "OneClickInstall";
 	import "OneClickInstallWorkerFunctions";

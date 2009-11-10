@@ -3,7 +3,7 @@
 	 * Store the UI terms used in One Click Install client.
 	 */
 	module "OneClickInstallWidgets";
-	textdomain "OneClickInstall";
+	textdomain "oneclickinstall";
 
 	import "Label";
 	import "HTML";

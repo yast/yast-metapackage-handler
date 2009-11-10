@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Nov 10 10:39:54 CET 2009 - mvidner@suse.cz
+
+- Fixed translations (bnc#543745) by changing the text domain from
+  OneClickInstall to oneclickinstall, which is what is in the
+  translation repo. Other yast modules use lowercase too.
+- 0.8.10
+
+-------------------------------------------------------------------
 Mon May 25 14:57:39 CEST 2009 - mvidner@suse.cz
 
 - Added -h, --help to /sbin/OCICLI.

@@ -2,7 +2,7 @@
  * User Interface for the One Click Install Feature.
  */
 {
-	textdomain "OneClickInstall";
+	textdomain "oneclickinstall";
 
 	import "OneClickInstall";
 	import "OneClickInstallWidgets";

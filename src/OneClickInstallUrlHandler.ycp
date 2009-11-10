@@ -1,6 +1,6 @@
 {
 	//Allows embedding just the URL to the metapackage in the web page, instead of the entire package.
-	textdomain "OneClickInstall";
+	textdomain "oneclickinstall";
 
 	list<string> args = (list<string>)WFM::Args();
 	string urlurl = args[0]:"";

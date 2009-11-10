@@ -1,5 +1,5 @@
 {
-	textdomain "OneClickInstall";
+	textdomain "oneclickinstall";
 	module "OneClickInstallWorkerResponse";
 
 	import "XML";
