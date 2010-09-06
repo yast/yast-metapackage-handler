@@ -4,7 +4,7 @@
 {
 	module "OneClickInstallWorkerFunctions";
 
-	textdomain "OneClickInstall";
+	textdomain "oneclickinstall";
 
 	import "HTTP";
 	import "FTP";
