@@ -3,7 +3,7 @@
 	 * Module to provide simple API for working with the One Click Install metapackages.
 	 * Enables removal of non-UI logic from UI module.
 	**/
-	textdomain "OneClickInstall";
+	textdomain "oneclickinstall";
 	module "OneClickInstall";
 	
 	import "XML";
