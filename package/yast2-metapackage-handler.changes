@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Oct 12 13:32:37 UTC 2010 - lslezak@suse.cz
+
+- don't use obsoleted inst_packages.ycp client, use PackagesUI.ycp
+  module instead (bnc#471490)
+- 0.8.10
+
+-------------------------------------------------------------------
 Mon Sep  6 09:42:58 CEST 2010 - jsrain@suse.cz
 
 - lowercase the textdomain to be consistent with the rest of YaST

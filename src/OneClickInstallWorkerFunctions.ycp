@@ -17,6 +17,7 @@
 	import "Progress";
 	import "PackageSlideShow";
 	import "SlideShow";
+	import "PackagesUI";
 
 	import "CommandLine";
 
@@ -207,7 +208,7 @@
 			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
 		} else //xxx no callback for resolve failures
 		{
-			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
+			symbol result = PackagesUI::RunPackageSelector($["mode" : `summaryMode]);
 			if (result == `accept)
 			{
 				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
@@ -247,7 +248,7 @@
 			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
 		} else //xxx no callback for resolve failures
 		{
-			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
+			symbol result = PackagesUI::RunPackageSelector($["mode" : `summaryMode]);
 			if (result == `accept)
 			{
 				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
@@ -282,7 +283,7 @@
 			state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
 		} else //xxx no callback for resolve failures
 		{
-			symbol result = (symbol)WFM::CallFunction( "inst_packages", [`summaryMode]);
+			symbol result = PackagesUI::RunPackageSelector($["mode" : `summaryMode]);
 			if (result == `accept)
 			{
 				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
