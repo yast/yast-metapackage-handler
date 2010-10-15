@@ -211,6 +211,9 @@
 			symbol result = PackagesUI::RunPackageSelector($["mode" : `summaryMode]);
 			if (result == `accept)
 			{
+				// initialize slideshow data (package counters)
+				InitSlideShow(_("Installing Packages..."));
+
 				state = !(Pkg::PkgCommit(0)[0]:-1 < 0);
 			} else
 			{
