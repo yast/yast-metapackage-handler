@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Oct 15 11:34:00 UTC 2010 - lslezak@suse.cz
+
+- added missing slidshow initialization after manual conflict
+  resolution, properly display the total number of pakages to
+  install (bnc#590198)
+- 0.8.11
+
+-------------------------------------------------------------------
 Tue Oct 12 13:32:37 UTC 2010 - lslezak@suse.cz
 
 - don't use obsoleted inst_packages.ycp client, use PackagesUI.ycp
