@@ -1,4 +1,5 @@
 [Desktop Entry]
+X-SuSE-YaST-RootOnly=false
 X-SuSE-translate=false
 Exec=/sbin/yast2 MetaPackageHandler %U
 InitialPreference=2
@@ -7,6 +8,4 @@ Name=yast2
 StartupNotify=false
 Terminal=false
 Type=Application
-X-KDE-SubstituteUID=false
 X-KDE-StartupNotify=false
-
