@@ -3,6 +3,7 @@ Fri Jul 22 14:48:20 CEST 2011 - locilka@suse.cz
 
 - removed X-KDE-SubstituteUID from the desktop file and replaced
   with X-SuSE-YaST-RootOnly (bnc#540627)
+- 0.8.12
 
 -------------------------------------------------------------------
 Fri Oct 15 11:34:00 UTC 2010 - lslezak@suse.cz
