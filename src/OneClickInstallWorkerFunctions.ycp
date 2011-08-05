@@ -47,6 +47,9 @@
 	 **/
 	global list<string> DeDupe(list<string> url_list)
 	{
+		// read trusted GPG keys
+		Pkg::TargetInitialize("/");
+
 		list<integer> sources = Pkg::SourceStartCache(true);
 
 		list<string> deduped = [];
