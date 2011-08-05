@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Aug  5 13:28:21 UTC 2011 - lslezak@suse.cz
+
+- import trusted GPG keys before refreshing repositories, do not
+  ask for importing already trusted keys (bnc#652043)
+- 0.8.13
+
+-------------------------------------------------------------------
 Fri Jul 22 14:48:20 CEST 2011 - locilka@suse.cz
 
 - removed X-KDE-SubstituteUID from the desktop file and replaced
