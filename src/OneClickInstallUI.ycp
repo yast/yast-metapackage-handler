@@ -253,6 +253,7 @@
 	{
 		UI::WizardCommand(`DeleteSteps());
 		Wizard::SetDesktopIcon("sw_single"); // #329644
+		Wizard::SetDialogTitle(_("1-Click Install"));
 		Wizard::SetContents (sformat(_("%1 Installation"),OneClickInstall::GetName()), `Empty(), HELP_TEXT, true, true);
 
 		UI::WizardCommand(`AddStepHeading( _("Installation Steps") ) );
@@ -302,6 +303,7 @@
 
 		UI::ReplaceWidget(`id(`contents),(installation_widgets[ no ]:$[])["widget"]:OneClickInstallWidgets::GetIncompatibleYMPUI());
 		Wizard::SetTitleIcon ("yast-software");
+		Wizard::SetDialogTitle(_("1-Click Install"));
 	
 		UI::WizardCommand(`SetCurrentStep( current_id ) );
 		if (is_viewing_splash(no))

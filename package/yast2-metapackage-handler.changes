@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Sep 29 13:11:33 CEST 2011 - visnov@suse.cz
+
+- set dialog title
+- rename the module in desktop file to reflect reality
+- 0.8.14 
+
+-------------------------------------------------------------------
 Fri Aug  5 13:28:21 UTC 2011 - lslezak@suse.cz
 
 - import trusted GPG keys before refreshing repositories, do not
