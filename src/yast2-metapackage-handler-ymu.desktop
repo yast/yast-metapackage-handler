@@ -1,7 +1,7 @@
 # to ${PREFIX-~/.local}/share/applications
 [Desktop Entry]
-Name=YaST Meta Package Handler
-GenericName=Meta Package Handler
+Name=YaST 1-Click Install
+GenericName=YaST 1-Click Install
 Comment=Install packages without manually adding repositories
 Exec=/sbin/OneClickInstallUrlHandler %f
 Terminal=false
