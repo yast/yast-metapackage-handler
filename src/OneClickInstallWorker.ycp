@@ -24,7 +24,7 @@
 	
 	Wizard::CreateDialog();
 	Wizard::SetDesktopIcon("sw_single");
-	
+	Wizard::SetDialogTitle(_("1-Click Install"));
 
 	//Load the xml communication from the user interface.
 	OneClickInstall::FromXML(xmlFileName);
