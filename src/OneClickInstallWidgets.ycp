@@ -30,7 +30,7 @@
 	term softwareUI = `VBox
 	(
 		`VWeight(2,
-					`Heading(_("Software to be Installed"))
+					`Heading(_("Software to Be Installed"))
 				),
 		`VWeight(10,
 					`MultiSelectionBox(`id(`softwareCheckList),`opt(`notify), _("Select the software components you wish to install:"), [SPACER])
@@ -44,7 +44,7 @@
 	term removeUI = `VBox
 	(
 		`VWeight(2,
-					`Heading(_("Software to be Removed"))
+					`Heading(_("Software to Be Removed"))
 				),
 		`VWeight(10,
 					`MultiSelectionBox(`id(`removeCheckList),`opt(`notify), _("Select the software components you wish to remove:"), [SPACER])
@@ -66,7 +66,7 @@
 	`HSpacing(1),
 	`VBox(
 	    `VSpacing(0.2),
-	    `Heading( _("Please wait while this software is being installed.")),
+	    `Heading( _("Software is being installed.")),
 	    `VSpacing(0.2)
 	    ),
 	`HSpacing(1)
@@ -322,7 +322,7 @@ Malicious packages could damage your system.
 						`VWeight(5,
 								`RichText(`id(`summary),"")
 						),
-						`HBox(`Right(`PushButton(`id(`alterProposal),_("Customise"))))
+						`HBox(`Right(`PushButton(`id(`alterProposal),_("Customize"))))
 					)
 						
 				);

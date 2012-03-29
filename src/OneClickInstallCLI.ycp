@@ -20,7 +20,7 @@
 		if (!OneClickInstall::HaveAnythingToDo())
 		{
 			y2error("Nothing to do specified in the YMP file");
-			CommandLine::Print(_("Error: Nothing to do specified in the YMP file"));
+			CommandLine::Print(_("Error: Nothing to do specified in the YMP file."));
 			return false;
 		}
 
