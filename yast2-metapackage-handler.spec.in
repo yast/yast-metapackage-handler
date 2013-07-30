@@ -35,6 +35,8 @@ Requires:	/usr/bin/xdg-su
 
 BuildArchitectures:	noarch
 
+Requires:       yast2-ruby-bindings >= 1.0.0
+
 Summary:			YaST2 - Easy Installation of Add-on RPMs using Metapackages
 
 %description
@@ -88,10 +90,9 @@ fi
 /sbin/OneClickInstallCLI
 /sbin/OCICLI
 %dir @clientdir@
-@clientdir@/*.ycp
+@clientdir@/*.rb
 %dir @moduledir@
-@moduledir@/*.ycp
-@moduledir@/*.ybc
+@moduledir@/*.rb
 @moduledir@/*.pm
 %if %suse_version <= 1020
 /opt/kde3
