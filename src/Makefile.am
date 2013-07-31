@@ -1,36 +1,19 @@
-
-client_DATA = \
-	OneClickInstallUI.ycp \
-	OneClickInstallWorker.ycp \
-	OneClickInstallUrlHandler.ycp \
-	OneClickInstallCLI.ycp
+# Sources for metapackage
 
 module_DATA = \
-	OneClickInstall.ycp \
-	OneClickInstallWorkerResponse.ycp \
-	OneClickInstallWorkerFunctions.ycp \
-	OneClickInstallWidgets.ycp \
-	UserSettings.ycp \
-	YPX.pm
+  modules/UserSettings.rb \
+  modules/OneClickInstallWidgets.rb \
+  modules/OneClickInstall.rb \
+  modules/OneClickInstallWorkerResponse.rb \
+  modules/OneClickInstallWorkerFunctions.rb \
+  modules/YPX.pm
 
-dist_sbin_SCRIPTS = \
-	OneClickInstallUrlHandler \
-	OneClickInstallCLI
+client_DATA = \
+  clients/OneClickInstallWorker.rb \
+  clients/OneClickInstallUrlHandler.rb \
+  clients/OneClickInstallCLI.rb \
+  clients/OneClickInstallUI.rb
 
-install-exec-hook:
-	$(LN_S) -f OneClickInstallUrlHandler $(DESTDIR)$(sbindir)/OneClickInstallUI 
-	$(LN_S) -f OneClickInstallCLI $(DESTDIR)$(sbindir)/OCICLI
+EXTRA_DIST = $(module_DATA) $(client_DATA)
 
-old_distro_Data = kdeymp.desktop x-suse-ymp.desktop
-
-mimedir = $(datadir)/mime/packages
-mime_DATA = yast2-metapackage-handler-mimetypes.xml
-
-# overrides devtools
-desktopdir = $(datadir)/applications
-desktop_DATA = yast2-metapackage-handler.desktop yast2-metapackage-handler-ymu.desktop
-
-EXTRA_DIST = $(client_DATA) $(module_DATA) $(old_distro_Data) $(mime_DATA) $(desktop_DATA)
-
-# module compilation
 include $(top_srcdir)/Makefile.am.common
