@@ -1,17 +1,39 @@
-@HEADER-COMMENT@
+#
+# spec file for package yast2-metapackage-handler
+#
+# Copyright (c) 2013 SUSE LINUX Products GmbH, Nuernberg, Germany.
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
 
-@HEADER@
-Group:	System/YaST
-License: GPL-2.0+
+# Please submit bugfixes or comments via http://bugs.opensuse.org/
+#
+
+
+Name:           yast2-metapackage-handler
+Version:        3.0.1
+Release:        0
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+Source0:        %{name}-%{version}.tar.bz2
+
+Group:	        System/YaST
+License:        GPL-2.0+
 
 # should be required by devtools
 BuildRequires: pkgconfig perl-XML-Writer
 # y2tool
-BuildRequires: yast2-devtools
+BuildRequires:  yast2-devtools >= 3.0.6
 # ycpc
 BuildRequires: yast2-core
 # we have a Perl part
-BuildRequires: yast2-perl-bindings
+BuildRequires:  yast2-perl-bindings
 BuildRequires:	perl-XML-XPath
 BuildRequires:	yast2
 BuildRequires:	yast2-country-data
@@ -43,7 +65,8 @@ Summary:			YaST2 - Easy Installation of Add-on RPMs using Metapackages
 With this technology users can install packages and add repositories
 with a simple click on a link in a website.
 
-@PREP@
+%prep
+%setup -n %{name}-%{version}
 
 %if %suse_version <= 1020
 %patch0
@@ -53,9 +76,12 @@ with a simple click on a link in a website.
 %patch1
 %endif
 
-@BUILD@
+%build
+%yast_build
 
-@INSTALL@
+%install
+%yast_install
+
 %if %suse_version <= 1020
 mkdir -p $RPM_BUILD_ROOT/opt/kde3/share/applnk/.hidden/
 mkdir -p $RPM_BUILD_ROOT/opt/kde3/share/mimelnk/text/
@@ -68,7 +94,6 @@ install -m 0644 src/x-suse-ymp.desktop \
 %suse_update_desktop_file yast2-metapackage-handler 
 %suse_update_desktop_file yast2-metapackage-handler-ymu
 
-@CLEAN@
 
 %post
 # #330352, SuSEconfig.desktop-file-utils only calls
@@ -84,16 +109,16 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc @docdir@
+%doc %{yast_docdir}
 /sbin/OneClickInstallUI
 /sbin/OneClickInstallUrlHandler
 /sbin/OneClickInstallCLI
 /sbin/OCICLI
-%dir @clientdir@
-@clientdir@/*.rb
-%dir @moduledir@
-@moduledir@/*.rb
-@moduledir@/*.pm
+%dir %{yast_clientdir}
+%{yast_clientdir}/*.rb
+%dir %{yast_moduledir}
+%{yast_moduledir}/*.rb
+%{yast_moduledir}/*.pm
 %if %suse_version <= 1020
 /opt/kde3
 %endif
