@@ -17,7 +17,7 @@
 
 
 Name:           yast2-metapackage-handler
-Version:        3.1.0
+Version:        3.1.1
 Release:        0
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -114,6 +114,11 @@ fi
 /sbin/OneClickInstallUrlHandler
 /sbin/OneClickInstallCLI
 /sbin/OCICLI
+%{_sbindir}/OneClickInstallUI
+%{_sbindir}/OneClickInstallUrlHandler
+%{_sbindir}/OneClickInstallCLI
+%{_sbindir}/OCICLI
+
 %dir %{yast_clientdir}
 %{yast_clientdir}/*.rb
 %dir %{yast_moduledir}
