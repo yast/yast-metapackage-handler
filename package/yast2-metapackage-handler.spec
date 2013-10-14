@@ -114,6 +114,11 @@ fi
 /sbin/OneClickInstallUrlHandler
 /sbin/OneClickInstallCLI
 /sbin/OCICLI
+%{_sbindir}/OneClickInstallUI
+%{_sbindir}/OneClickInstallUrlHandler
+%{_sbindir}/OneClickInstallCLI
+%{_sbindir}/OCICLI
+
 %dir %{yast_clientdir}
 %{yast_clientdir}/*.rb
 %dir %{yast_moduledir}
