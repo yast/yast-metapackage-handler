@@ -3,7 +3,7 @@
 Name=YaST 1-Click Install
 GenericName=YaST 1-Click Install
 Comment=Install packages without manually adding repositories
-Exec=/sbin/OneClickInstallUI %f
+Exec=/usr/sbin/OneClickInstallUI %f
 Terminal=false
 MultipleArgs=false
 Type=Application
