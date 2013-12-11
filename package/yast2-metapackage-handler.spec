@@ -29,7 +29,7 @@ License:        GPL-2.0+
 # should be required by devtools
 BuildRequires: pkgconfig perl-XML-Writer
 # y2tool
-BuildRequires:  yast2-devtools >= 3.0.6
+BuildRequires:  yast2-devtools >= 3.1.10
 # ycpc
 BuildRequires: yast2-core
 # we have a Perl part
