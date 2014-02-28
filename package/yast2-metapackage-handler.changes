@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Feb 28 10:48:59 UTC 2014 - pgajdos@suse.com
+
+- fix fail message (when product not found) for sles 
+
+- added patches:
+  * SLE-label.diff
+
+-------------------------------------------------------------------
 Mon Oct 14 13:14:34 UTC 2013 - jreidinger@suse.com
 
 - Move binaries from /sbin to /usr/sbin to follow conventions and 

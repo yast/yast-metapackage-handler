@@ -1,7 +1,7 @@
 #
 # spec file for package yast2-metapackage-handler
 #
-# Copyright (c) 2013 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# Copyright (c) 2014 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -23,43 +23,44 @@ Release:        0
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Source0:        %{name}-%{version}.tar.bz2
 
-Group:	        System/YaST
-License:        GPL-2.0+
-
 # should be required by devtools
-BuildRequires: pkgconfig perl-XML-Writer
+BuildRequires:  perl-XML-Writer
+BuildRequires:  pkgconfig
 # y2tool
 BuildRequires:  yast2-devtools >= 3.1.10
 # ycpc
-BuildRequires: yast2-core
+BuildRequires:  yast2-core
 # we have a Perl part
+BuildRequires:  perl-XML-XPath
+BuildRequires:  yast2
+BuildRequires:  yast2-country-data
+BuildRequires:  yast2-packager
 BuildRequires:  yast2-perl-bindings
-BuildRequires:	perl-XML-XPath
-BuildRequires:	yast2
-BuildRequires:	yast2-country-data
-BuildRequires:	yast2-transfer
-BuildRequires:	yast2-packager
+BuildRequires:  yast2-transfer
 # desktop files
-BuildRequires:	update-desktop-files
+BuildRequires:  update-desktop-files
 
-Patch0:	SLE.diff
-Patch1: 103.diff
+Patch0:         SLE.diff
+Patch1:         103.diff
+Patch2:         SLE-label.diff
 
-Requires: 	yast2-perl-bindings
-Requires:	perl-XML-XPath
-Requires:	yast2
-Requires:	yast2-packager
-Requires:	yast2-transfer
+Requires:       perl-XML-XPath
+Requires:       yast2
+Requires:       yast2-packager
+Requires:       yast2-perl-bindings
+Requires:       yast2-transfer
 # Language
-Requires:	yast2-country-data
+Requires:       yast2-country-data
 # needed at runtime for invoking root mode
-Requires:	/usr/bin/xdg-su
+Requires:       /usr/bin/xdg-su
 
-BuildArchitectures:	noarch
+BuildArch:      noarch
 
 Requires:       yast2-ruby-bindings >= 1.0.0
 
-Summary:			YaST2 - Easy Installation of Add-on RPMs using Metapackages
+Summary:        YaST2 - Easy Installation of Add-on RPMs using Metapackages
+License:        GPL-2.0+
+Group:          System/YaST
 
 %description
 With this technology users can install packages and add repositories
@@ -75,6 +76,10 @@ with a simple click on a link in a website.
 %if %suse_version <= 1030
 %patch1
 %endif
+
+#%if 1315 <= %suse_version && %suse_version < 1320
+%patch2
+#%endif
 
 %build
 %yast_build
@@ -93,7 +98,6 @@ install -m 0644 src/x-suse-ymp.desktop \
 %endif
 %suse_update_desktop_file yast2-metapackage-handler 
 %suse_update_desktop_file yast2-metapackage-handler-ymu
-
 
 %post
 # #330352, SuSEconfig.desktop-file-utils only calls
@@ -129,3 +133,5 @@ fi
 %endif
 %{_datadir}/mime/packages/*.xml
 %{_datadir}/applications/yast2-metapackage-handler*.desktop
+
+%changelog
