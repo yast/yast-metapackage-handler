@@ -10,6 +10,7 @@ module Yast
 
       Yast.import "Label"
       Yast.import "HTML"
+      Yast.import "Product"
 
       @SPACER = "                                                                    "
 
@@ -68,7 +69,9 @@ module Yast
         Heading(_("Installation not possible")),
         RichText(
           _(
-            "The install link or file you opened does not contain instructions for this version of openSUSE."
+            Ops.add(
+              Ops.add("The install link or file you opened does not contain instructions for ", Product.name),
+              ".")
           )
         )
       )
