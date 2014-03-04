@@ -68,11 +68,7 @@ module Yast
       @nothing = VBox(
         Heading(_("Installation not possible")),
         RichText(
-          _(
-            Ops.add(
-              Ops.add("The install link or file you opened does not contain instructions for ", Product.name),
-              ".")
-          )
+          _("The install link or file you opened does not contain instructions for %s.") % Product.name
         )
       )
 
