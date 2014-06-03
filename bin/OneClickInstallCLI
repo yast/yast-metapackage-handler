@@ -5,7 +5,7 @@ then
 	exit 1
 fi
 TEMPFILE=$(mktemp)
-/sbin/YaST OneClickInstallCLI prepareinstall url=$1 targetfile=$TEMPFILE
+/sbin/yast2 OneClickInstallCLI prepareinstall url=$1 targetfile=$TEMPFILE
 if [ $? -ne 0 ]
 then
 	exit $?
@@ -16,7 +16,7 @@ read continue
 continue=${continue:="N"}
 if [ $continue == "Y" ] ||  [ $continue == "y" ]
 then
-	su -c "/sbin/YaST OneClickInstallCLI doinstall instructionsfile=$TEMPFILE"
+	su -c "/sbin/yast2 OneClickInstallCLI doinstall instructionsfile=$TEMPFILE"
 else
 	exit 2 
 fi
