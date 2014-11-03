@@ -111,7 +111,6 @@ module Yast
             "enabled"     => true,
             "autorefresh" => true,
             "name"        => OneClickInstall.GetRepositoryName(new_url),
-            "alias"       => OneClickInstall.GetRepositoryName(new_url),
             "base_urls"   => [new_url]
           }
           srcid = Pkg.RepositoryAdd(repoData)
