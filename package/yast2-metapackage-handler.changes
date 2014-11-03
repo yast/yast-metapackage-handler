@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Nov  3 14:45:57 UTC 2014 - lslezak@suse.cz
+
+- do not use repository name as alias, it must be unique, let
+  pkg-bindings create it (bnc#551014)
+- 3.1.4
+
+-------------------------------------------------------------------
 Wed Jun  4 06:47:46 UTC 2014 - pgajdos@suse.com
 
 - OneClickInstallCLI: /sbin/YaST -> /usr/sbin/yast
