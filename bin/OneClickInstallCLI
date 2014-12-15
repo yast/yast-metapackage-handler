@@ -14,7 +14,7 @@ fi
 echo "Continue? y/N"
 read continue
 continue=${continue:="N"}
-if [ $continue == "Y" ] ||  [ $continue == "y" ]
+if [ $continue = "Y" ] ||  [ $continue = "y" ]
 then
 	su -c "/usr/sbin/yast OneClickInstallCLI doinstall instructionsfile=$TEMPFILE"
 else
