@@ -8,7 +8,7 @@ Mon Nov  3 14:45:57 UTC 2014 - lslezak@suse.cz
 -------------------------------------------------------------------
 Wed Jun  4 06:47:46 UTC 2014 - pgajdos@suse.com
 
-- OneClickInstallCLI: /sbin/YaST -> /usr/sbin/yast
+- OneClickInstallCLI: /sbin/YaST -> /usr/sbin/yast (bnc#926313)
 - 3.1.3
 
 -------------------------------------------------------------------
