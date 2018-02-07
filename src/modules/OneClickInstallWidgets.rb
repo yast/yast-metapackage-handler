@@ -118,7 +118,7 @@ module Yast
         Ops.add(
           Ops.add(
             Ops.add(
-              "<body bgcolor=\"White\">",
+              "<body>",
               HTML.Heading(_("Repository Description:"))
             ),
             NewLinesToRichText(description)
@@ -177,7 +177,7 @@ module Yast
         Ops.add(
           Ops.add(
             Ops.add(
-              "<body bgcolor=\"White\">",
+              "<body>",
               HTML.Heading(_("Package Description:"))
             ),
             NewLinesToRichText(description)
@@ -229,7 +229,7 @@ module Yast
         Ops.add(
           Ops.add(
             Ops.add(
-              "<body bgcolor=\"White\">",
+              "<body>",
               HTML.Heading(_("Package Description:"))
             ),
             NewLinesToRichText(description)
@@ -355,7 +355,7 @@ module Yast
       end
 
       summaryStr = Ops.add(
-        "<body bgcolor=\"White\">",
+        "<body>",
         HTML.Colorize(
           _(
             "If you continue, the following changes will be made to your system:"
@@ -454,7 +454,7 @@ module Yast
         :Value,
         Ops.add(
           Ops.add(
-            "<body bgcolor=\"White\">",
+            "<body>",
             HTML.Para(NewLinesToRichText(description))
           ),
           "</body>"
@@ -481,7 +481,7 @@ module Yast
       failedPatterns = deep_copy(failedPatterns)
       failedPackages = deep_copy(failedPackages)
       statusStr = Ops.add(
-        "<body bgcolor=\"White\">",
+        "<body>",
         HTML.Heading(_("Software installation"))
       )
 
