@@ -2,6 +2,7 @@
 Tue Feb  13 11:46:30 UTC 2018 - lelcp@protonmail.com
 
 - don't use inline html styles when including package metadata
+  (bsc#1080792)
 - 4.0.0
 
 -------------------------------------------------------------------
