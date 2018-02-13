@@ -1,6 +1,12 @@
 -------------------------------------------------------------------
 Mon Nov  3 14:45:57 UTC 2014 - lslezak@suse.cz
 
+- don't use inline html styles when including package metadata
+- 4.0.0
+
+-------------------------------------------------------------------
+Mon Nov  3 14:45:57 UTC 2014 - lslezak@suse.cz
+
 - do not use repository name as alias, it must be unique, let
   pkg-bindings create it (bnc#551014)
 - 3.1.4
