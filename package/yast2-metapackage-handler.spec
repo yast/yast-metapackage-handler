@@ -123,6 +123,7 @@ fi
 %dir %{yast_moduledir}
 %{yast_moduledir}/*.rb
 %{yast_moduledir}/*.pm
+%license COPYING
 %if %suse_version <= 1020
 /opt/kde3
 %endif
