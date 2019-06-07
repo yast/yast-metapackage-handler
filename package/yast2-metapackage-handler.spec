@@ -67,8 +67,7 @@ with a simple click on a link in a website.
 %install
 %yast_install
 
-%suse_update_desktop_file yast2-metapackage-handler 
-%suse_update_desktop_file yast2-metapackage-handler-ymu
+%suse_update_desktop_file org.opensuse.yast.MetapackageHandler
 
 %files
 %doc %{yast_docdir}
