@@ -73,8 +73,7 @@ with a simple click on a link in a website.
 %files
 %doc %{yast_docdir}
 %license COPYING
-/sbin/
-%{_sbindir}/
+%{_bindir}/
 %{yast_clientdir}
 %{yast_moduledir}
 %{_datadir}/mime/packages/
