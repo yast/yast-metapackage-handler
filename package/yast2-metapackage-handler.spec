@@ -22,6 +22,7 @@ Release:        0
 Summary:        YaST2 - Easy Installation of Add-on RPMs using Metapackages
 License:        GPL-2.0-or-later
 Group:          System/YaST
+Url:            https://github.com/yast/yast-metapackage-handler
 
 Source0:        %{name}-%{version}.tar.bz2
 
