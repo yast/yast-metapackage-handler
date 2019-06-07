@@ -63,7 +63,6 @@ with a simple click on a link in a website.
 %setup -q
 
 %build
-%yast_build
 
 %install
 %yast_install
