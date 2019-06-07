@@ -1,14 +1,13 @@
-# to ${PREFIX-~/.local}/share/applications
 [Desktop Entry]
 Name=YaST 1-Click Install
-GenericName=YaST 1-Click Install
+GenericName=1-Click Install
 Comment=Install packages without manually adding repositories
-Exec=/usr/sbin/OneClickInstallUrlHandler %f
+Exec=/usr/sbin/OneClickInstallUI %f
+Icon=yast-oneclick
 Terminal=false
 MultipleArgs=false
 Type=Application
-MimeType=text/x-suse-ymu;
+MimeType=text/x-suse-ymp;text/x-suse-ymu;
 Categories=Settings;System;SystemSetup;
-# thx Beineri
 NoDisplay=true
 X-KDE-StartupNotify=false

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128px" height="128px">
+<defs>
+<linearGradient id="lg1"> <stop stop-color="#c0bfbc" offset="0" /> <stop stop-color="#aeada9" offset="1" />
+</linearGradient>
+<linearGradient id="lg2"> <stop stop-color="#dcdbd8" offset="0" /> <stop offset="0.03816106" stop-color="#f6f5f4" /> <stop stop-color="#dcdbd8" offset="0.07692308" /> <stop offset="0.92307693" stop-color="#dcdbd8" /> <stop offset="0.96153849" stop-color="#f6f5f4" /> <stop stop-color="#dcdbd8" offset="1" />
+</linearGradient>
+<linearGradient id="lg3"> <stop stop-color="#f5f4f3" offset="0" /> <stop stop-color="#d7d3ce" offset="1" />
+</linearGradient>
+<linearGradient id="lg4"> <stop stop-color="#ffffff" stop-opacity="0" offset="0" /> <stop stop-color="#ffffff" offset="1" />
+</linearGradient>
+<linearGradient gradientTransform="translate(0,-257.94489)" xlink:href="#lg4" id="lg5" x1="20" y1="279.94489" x2="20" y2="339.94489" gradientUnits="userSpaceOnUse" />
+<linearGradient xlink:href="#lg3" id="lg6" x1="40" y1="112" x2="40" y2="116" gradientUnits="userSpaceOnUse" />
+<linearGradient gradientTransform="translate(0,-257.94489)" xlink:href="#lg2" id="lg7" x1="12" y1="317.94488" x2="116" y2="317.94488" gradientUnits="userSpaceOnUse" />
+<linearGradient gradientTransform="translate(0,-257.94489)" xlink:href="#lg1" id="lg8" x1="52" y1="369.94489" x2="52" y2="361.94489" gradientUnits="userSpaceOnUse" />
+</defs>
+<path fill="url(#lg6)" d="m 44,112 c -2.216,0 -4,1.784 -4,4 h 48 c 0,-2.216 -1.784,-4 -4,-4 z" />
+<path fill="url(#lg8)" d="m 52,112 1,-12 h 22 l 1,12 z" />
+<rect fill="url(#lg7)" width="104" height="88" x="12" y="16" ry="8" />
+<rect fill="#f6f5f4" width="104" height="88" x="12" y="12" ry="8" />
+<rect fill="#241f31" width="96" height="72" x="16" y="16" ry="4" />
+<path fill="#57e389" d="M 64 28 L 50 42 L 54 46 L 60 40 L 60 62.34375 L 54.828125 57.171875 A 4.0004 4.0004 0 0 0 51.958984 55.958984 A 4.0004 4.0004 0 0 0 51.419922 56 L 48 56 L 48 59.423828 A 4.0004 4.0004 0 0 0 49.171875 62.828125 L 64 77.65625 L 78.828125 62.828125 A 4.0004 4.0004 0 0 0 80 59.289062 L 80 56 L 76.728516 56 A 4.0004 4.0004 0 0 0 73.171875 57.171875 L 68 62.34375 L 68 28 L 64 28 z " />
+<rect fill="url(#lg5)" opacity="0.1" width="84" height="60" x="22" y="22" ry="0" />
+</svg>
