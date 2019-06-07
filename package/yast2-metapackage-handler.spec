@@ -76,6 +76,7 @@ with a simple click on a link in a website.
 %{_bindir}/
 %{yast_clientdir}
 %{yast_moduledir}
+%{yast_icondir}
 %{_datadir}/mime/packages/
 %{_datadir}/applications/
 
