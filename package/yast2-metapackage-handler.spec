@@ -41,6 +41,7 @@ BuildRequires:  yast2-perl-bindings
 BuildRequires:  yast2-transfer
 # desktop files
 BuildRequires:  update-desktop-files
+BuildRequires:  rubygem(%rb_default_ruby_abi:yast-rake)
 
 Requires:       perl-XML-XPath
 Requires:       yast2
