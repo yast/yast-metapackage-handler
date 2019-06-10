@@ -1,4 +1,0 @@
-#!/bin/sh
-# This is just a wrapper to be used by Firefox.
-MODULE=${0##*/}
-/sbin/yast2 $MODULE "$@"

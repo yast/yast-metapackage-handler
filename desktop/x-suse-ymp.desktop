@@ -1,9 +1,0 @@
-[Desktop Entry]
-Comment=Yast Meta Package
-Hidden=false
-Icon=YaST
-MimeType=text/x-suse-ymp
-Patterns=*.ymp
-Type=MimeType
-
-X-SuSE-translate=true

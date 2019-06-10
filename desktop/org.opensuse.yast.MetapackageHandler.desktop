@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=YaST 1-Click Install
+GenericName=1-Click Install
+Comment=Install packages without manually adding repositories
+Exec=/usr/bin/OneClickInstallUI %f
+Icon=yast-oneclick
+Terminal=false
+Type=Application
+MimeType=text/x-suse-ymp;text/x-suse-ymu;
+Categories=Settings;System;
+NoDisplay=true
+X-KDE-StartupNotify=false
