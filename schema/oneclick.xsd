@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://opensuse.org/Standards/One_Click_Install" xmlns:o="http://opensuse.org/Standards/One_Click_Install">
-  <xs:complexType name="product">
+  <xs:complexType name="item">
     <xs:sequence>
       <xs:element ref="o:name"/>
       <xs:element maxOccurs="unbounded" ref="o:summary"/>
@@ -44,7 +44,7 @@
   <xs:complexType name="group">
     <xs:sequence>
       <xs:element ref="o:repositories"/>
-      <xs:element ref="o:products"/>
+      <xs:element ref="o:software"/>
     </xs:sequence>
     <xs:attribute name="recommended" type="xs:boolean"/>
     <xs:attribute name="distversion" use="required" type="xs:string"/>
@@ -57,14 +57,14 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="repository" type="o:repository"/>
-  <xs:element name="products">
+  <xs:element name="software">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="o:product"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="o:item"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="product" type="o:product"/>
+  <xs:element name="item" type="o:item"/>
   <xs:element name="metapackage">
     <xs:complexType>
       <xs:sequence>
