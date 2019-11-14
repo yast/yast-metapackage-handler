@@ -32,6 +32,10 @@ mirrorableURL = (
 )
 
 group = (
+  element name {string} ?,
+  element summary {translateablestring} ?,
+  element description {translateablestring} ?,
+  element remainsubscribed {string} ?,
   element repositories {
     element repository { repository } *
   },
