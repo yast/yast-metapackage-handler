@@ -6,10 +6,24 @@
       <xs:element maxOccurs="unbounded" ref="o:summary"/>
       <xs:element maxOccurs="unbounded" ref="o:description"/>
     </xs:sequence>
-    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="package"/>
+          <xs:enumeration value="pattern"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
     <xs:attribute name="recommended" type="xs:boolean"/>
     <xs:attribute name="architectures" type="xs:string"/>
-    <xs:attribute name="action" type="xs:string"/>
+    <xs:attribute name="action">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="install"/>
+          <xs:enumeration value="remove"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
   </xs:complexType>
   <xs:element name="name" type="xs:string"/>
   <xs:element name="summary" type="o:translateablestring"/>
@@ -43,12 +57,17 @@
   </xs:complexType>
   <xs:complexType name="group">
     <xs:sequence>
+      <xs:element minOccurs="0" ref="o:name"/>
+      <xs:element minOccurs="0" ref="o:summary"/>
+      <xs:element minOccurs="0" ref="o:description"/>
+      <xs:element minOccurs="0" ref="o:remainsubscribed"/>
       <xs:element ref="o:repositories"/>
       <xs:element ref="o:software"/>
     </xs:sequence>
     <xs:attribute name="recommended" type="xs:boolean"/>
-    <xs:attribute name="distversion" use="required" type="xs:string"/>
+    <xs:attribute name="distversion" type="xs:string"/>
   </xs:complexType>
+  <xs:element name="remainsubscribed" type="xs:boolean"/>
   <xs:element name="repositories">
     <xs:complexType>
       <xs:sequence>

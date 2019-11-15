@@ -17,7 +17,10 @@
       </oneOrMore>
       <optional>
         <attribute name="type">
-          <data type="string" datatypeLibrary=""/>
+          <choice>
+            <value>package</value>
+            <value>pattern</value>
+          </choice>
         </attribute>
       </optional>
       <optional>
@@ -35,7 +38,10 @@
       <optional>
         <!-- DEFAULT all -->
         <attribute name="action">
-          <data type="string" datatypeLibrary=""/>
+          <choice>
+            <value>install</value>
+            <value>remove</value>
+          </choice>
         </attribute>
       </optional>
     </group>
@@ -104,6 +110,26 @@
     <data type="string" datatypeLibrary=""/>
   </define>
   <define name="group">
+    <optional>
+      <element name="name">
+        <data type="string" datatypeLibrary=""/>
+      </element>
+    </optional>
+    <optional>
+      <element name="summary">
+        <ref name="translateablestring"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="description">
+        <ref name="translateablestring"/>
+      </element>
+    </optional>
+    <optional>
+      <element name="remainsubscribed">
+        <data type="boolean"/>
+      </element>
+    </optional>
     <element name="repositories">
       <zeroOrMore>
         <element name="repository">
@@ -123,10 +149,12 @@
         <data type="boolean"/>
       </attribute>
     </optional>
-    <!-- DEFAULT true -->
-    <attribute name="distversion">
-      <data type="string" datatypeLibrary=""/>
-    </attribute>
+    <optional>
+      <!-- DEFAULT true -->
+      <attribute name="distversion">
+        <data type="string" datatypeLibrary=""/>
+      </attribute>
+    </optional>
   </define>
   <start>
     <element name="metapackage">
