@@ -100,10 +100,10 @@ module Yast
 
       repos.each do |repo|
         recommended = repo.attributes["recommended"] != "false"
-        url = xpath_text(repo, "url")
-        name = xpath_text(repo, "name")
-        summary = xpath_text(repo, "summary", lang: lang)
-        description = xpath_text(repo, "description", lang: lang)
+        url = xpath_text(repo, "url") || ""
+        name = xpath_text(repo, "name") || ""
+        summary = xpath_text(repo, "summary", lang: lang) || ""
+        description = xpath_text(repo, "description", lang: lang) || ""
 
         @repositories[url] = {
           "name" => name, "summary" => summary, "description" => description,
@@ -116,9 +116,9 @@ module Yast
       items = xpath_match(group, "software/item")
 
       items.each do |item|
-        name = xpath_text(item, "name")
-        summary = xpath_text(item, "summary", lang: lang)
-        description = xpath_text(item, "description", lang: lang)
+        name = xpath_text(item, "name") || ""
+        summary = xpath_text(item, "summary", lang: lang) || ""
+        description = xpath_text(item, "description", lang: lang) || ""
         recommended = item.attributes["recommended"] != "false"
         action = item.attributes["action"] != "remove" ? "install" : "remove"
         type = item.attributes["type"] != "pattern" ? "package" : "pattern"
