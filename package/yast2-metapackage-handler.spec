@@ -17,7 +17,7 @@
 
 
 Name:           yast2-metapackage-handler
-Version:        4.1.0
+Version:        4.1.1
 Release:        0
 Summary:        YaST2 - Easy Installation of Add-on RPMs using Metapackages
 License:        GPL-2.0-or-later
@@ -27,27 +27,21 @@ Url:            https://github.com/yast/yast-metapackage-handler
 Source0:        %{name}-%{version}.tar.bz2
 
 # should be required by devtools
-BuildRequires:  perl-XML-Writer
 BuildRequires:  pkgconfig
 # y2tool
 BuildRequires:  yast2-devtools >= 3.1.10
 # ycpc
 BuildRequires:  yast2-core
-# we have a Perl part
-BuildRequires:  perl-XML-XPath
 BuildRequires:  yast2
 BuildRequires:  yast2-country-data
 BuildRequires:  yast2-packager
-BuildRequires:  yast2-perl-bindings
 BuildRequires:  yast2-transfer
 # desktop files
 BuildRequires:  update-desktop-files
 BuildRequires:  rubygem(%rb_default_ruby_abi:yast-rake)
 
-Requires:       perl-XML-XPath
 Requires:       yast2
 Requires:       yast2-packager
-Requires:       yast2-perl-bindings
 Requires:       yast2-transfer
 # Language
 Requires:       yast2-country-data
