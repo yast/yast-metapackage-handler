@@ -1,9 +1,12 @@
 # encoding: utf-8
 
 require "yast"
+require "rexml/document"
 
 module Yast
   class OneClickInstallClass < Module
+    include Yast::Logger
+
     def main
       # Module to provide simple API for working with the One Click Install metapackages.
       # Enables removal of non-UI logic from UI module.
@@ -13,8 +16,6 @@ module Yast
       Yast.import "XML"
       Yast.import "Product"
       Yast.import "Language"
-
-      Yast.import "YPX"
 
       # 	repositories =
       #		$[ url =>
@@ -53,337 +54,149 @@ module Yast
       @description = ""
     end
 
-    #   *
-    #   * Load the Metapackage from the URL supplied for further processing.
-    #   * Converts from original form into a simple two lists, one of repositories, other of software.
-    #   * Uses the Product.ycp to obtain the correct version for our product.
-    #   * Uses the Language.ycp to obtain correct strings for our language.
-    #   *
-    #   * Picks the strings, mirror, and product at evaluation time.
+    # Load the Metapackage data from the YML file supplied for further processing.
     #
-    #   * N.B. This must be called before any of the rest of the methods.
-    #   *
-    #   * Internally the following format is used:
-    #   *	repositories =
-    #   *		$[ url =>
-    #   *			$[
-    #   *				name,
-    #   *				summary,
-    #   *				description,
-    #   *				recommended
-    #   *			]
-    #   *
-    #   *		]
-    #   *
-    #   *	software =
-    #   *		$[ name =>
-    #   *			$[
-    #   *				summary,
-    #   *				description,
-    #   *				action,
-    #   *				type,
-    #   *				recommended
-    #   *			]
-    #   *		]
-    #   * @param url The file to load the xml from.
-    #  *
-    def Load(url)
-      #Load the XML from file.
-      xml = YPX.Load(url)
-      #Load returns false on error
-      return if xml == false
+    # Convert data into two hashes, one for repositories, one for software.
+    # Use the Product.rb to obtain the correct version for our product.
+    # Use the Language.rb to obtain correct strings for our language.
+    #
+    # Pick the strings, mirror, and product at evaluation time.
+    #
+    # Note: This must be called before any of the rest of the methods.
+    #
+    # @param [String] file XML file with meta data.
+    #
+    def Load(file)
+      distversion = Product.name
+      lang = Language.language
 
-      #Try and load the name.
-      @name = YPX.SelectValue(
-        xml,
-        Ops.add(
-          Ops.add("/metapackage/group[@distversion='", Product.name),
-          "']/name"
-        )
-      )
-      if @name == ""
-        @name = YPX.SelectValue(
-          xml,
-          "/metapackage/group[not(@distversion)]/name"
-        )
-      end
+      xml = xml_from_file(file)
 
-      rs = YPX.SelectValue(
-        xml,
-        Ops.add(
-          Ops.add("/metapackage/group[@distversion='", Product.name),
-          "']/remainSubscribed"
-        )
-      )
-      if rs == ""
-        rs = YPX.SelectValue(
-          xml,
-          "/metapackage/group[not(@distversion)]/remainSubscribed"
-        )
-      end
-      if rs == "false"
-        @remainSubscribed = false
-      else
-        @remainSubscribed = true
-      end
+      log.info "distversion = #{distversion}, lang = #{lang}"
 
+      group = xpath_element(xml, "/metapackage/group", distversion: distversion)
 
-      #Try and load the summary.
-      @summary = YPX.SelectValue(
-        xml,
-        Ops.add(
-          Ops.add(
-            Ops.add(
-              Ops.add("/metapackage/group[@distversion='", Product.name),
-              "']/summary[@lang='"
-            ),
-            Language.language
-          ),
-          "']"
-        )
-      )
-      if @summary == ""
-        @summary = YPX.SelectValue(
-          xml,
-          Ops.add(
-            Ops.add("/metapackage/group[@distversion='", Product.name),
-            "']/summary[not(@lang)]"
-          )
-        )
-      end
-      if @summary == ""
-        @summary = YPX.SelectValue(
-          xml,
-          Ops.add(
-            Ops.add(
-              "/metapackage/group[not(@distversion)]/summary[@lang='",
-              Language.language
-            ),
-            "']"
-          )
-        )
-      end
-      if @summary == ""
-        @summary = YPX.SelectValue(
-          xml,
-          "/metapackage/group[not(@distversion)]/summary[not(@lang)]"
-        )
-      end
+      return if !group
 
-      #Try and load the description.
-      @description = YPX.SelectValue(
-        xml,
-        Ops.add(
-          Ops.add(
-            Ops.add(
-              Ops.add("/metapackage/group[@distversion='", Product.name),
-              "']/description[@lang='"
-            ),
-            Language.language
-          ),
-          "']"
-        )
-      )
-      if @description == ""
-        @description = YPX.SelectValue(
-          xml,
-          Ops.add(
-            Ops.add("/metapackage/group[@distversion='", Product.name),
-            "']/description[not(@lang)]"
-          )
-        )
-      end
-      if @description == ""
-        @description = YPX.SelectValue(
-          xml,
-          Ops.add(
-            Ops.add(
-              "/metapackage/group[not(@distversion)]/description[@lang='",
-              Language.language
-            ),
-            "']"
-          )
-        )
-      end
-      if @description == ""
-        @description = YPX.SelectValue(
-          xml,
-          "/metapackage/group[not(@distversion)]/description[not(@lang)]"
-        )
-      end
+      log.info "distversion in YMP = #{group.attributes['distversion']}"
 
-      #Load the repository details into our internal format from xml.
-      #We want to load details for our specific version.
-      _REPO_XPATH = Ops.add(
-        Ops.add("/metapackage/group[@distversion='", Product.name),
-        "']/repositories/repository"
-      )
-      #If that fails, use any.
-      _FALLBACK_REPO_XPATH = "/metapackage/group[not(@distversion)]/repositories/repository"
+      # pick name, summary, description from group element, if any, else from first package
+      @name = xpath_text(group, "name") ||
+              xpath_text(group, "software/item/name") || ""
 
+      @summary = xpath_text(group, "summary", lang: lang) ||
+                 xpath_text(group, "software/item/summary", lang: lang) || ""
 
-      #Select the repository URLs from the XML.
-      repoURLs = YPX.SelectValues(xml, Ops.add(_REPO_XPATH, "/url"))
-      #If we didn't have any try fallback xpath.
-      if Builtins.size(repoURLs) == 0
-        _REPO_XPATH = _FALLBACK_REPO_XPATH
-        repoURLs = YPX.SelectValues(xml, Ops.add(_REPO_XPATH, "/url"))
-      end
-      #Loop through the repo URLs and query the other details from the XML.
-      Builtins.foreach(repoURLs) do |url2|
-        #Construct xpath to query details of this specific repository
-        _THIS_REPO_XPATH = Ops.add(
-          Ops.add(Ops.add(_REPO_XPATH, "[url='"), url2),
-          "']/"
-        )
-        recommended = YPX.SelectValue(
-          xml,
-          Ops.add(_THIS_REPO_XPATH, "@recommended")
-        )
-        #If recommended not specified we default to true.
-        recommended = "true" if recommended != "false"
-        #Get the name in our language
-        name = YPX.SelectValue(
-          xml,
-          Ops.add(
-            Ops.add(
-              Ops.add(_THIS_REPO_XPATH, "name[@lang='"),
-              Language.language
-            ),
-            "']"
-          )
-        )
-        #If that failed, try without a language
-        if name == ""
-          name = YPX.SelectValue(
-            xml,
-            Ops.add(_THIS_REPO_XPATH, "name[not(@lang)]")
-          )
-        end
-        #Find the summary of this repository, in our language.
-        summary = YPX.SelectValue(
-          xml,
-          Ops.add(
-            Ops.add(
-              Ops.add(_THIS_REPO_XPATH, "summary[@lang='"),
-              Language.language
-            ),
-            "']"
-          )
-        )
-        #If that failed, try without a language.
-        if summary == ""
-          summary = YPX.SelectValue(
-            xml,
-            Ops.add(_THIS_REPO_XPATH, "summary[not(@lang)]")
-          )
-        end
-        #Find the description of this repository, in our language.
-        description = YPX.SelectValue(
-          xml,
-          Ops.add(
-            Ops.add(
-              Ops.add(_THIS_REPO_XPATH, "description[@lang='"),
-              Language.language
-            ),
-            "']"
-          )
-        )
-        #If that failed, try without a language.
-        if description == ""
-          description = YPX.SelectValue(
-            xml,
-            Ops.add(_THIS_REPO_XPATH, "description[not(@lang)]")
-          )
-        end
-        #Store this repository details in our list.
-        repoDetails = {
-          "name"        => name,
-          "summary"     => summary,
-          "description" => description,
-          "recommended" => recommended
+      @description = xpath_text(group, "description", lang: lang) ||
+                     xpath_text(group, "software/item/description", lang: lang) || ""
+
+      @remainSubscribed = xpath_text(group, "remainsubscribed") != "false"
+
+      log.info "name = #{@name}, remainSubscribed = #{@remainSubscribed}"
+      log.info "summary = #{@summary}"
+      log.info "description = #{@description}"
+
+      repos = xpath_match(group, "repositories/repository")
+
+      repos.each do |repo|
+        recommended = repo.attributes["recommended"] != "false"
+        url = xpath_text(repo, "url") || ""
+        name = xpath_text(repo, "name") || ""
+        summary = xpath_text(repo, "summary", lang: lang) || ""
+        description = xpath_text(repo, "description", lang: lang) || ""
+
+        @repositories[url] = {
+          "name" => name, "summary" => summary, "description" => description,
+          "recommended" => recommended.to_s
         }
-        @repositories = Builtins.add(@repositories, url2, repoDetails)
       end
 
-      #Load package names for this distversion.
-      _SOFTWARE_XPATH = Ops.add(
-        Ops.add("/metapackage/group[@distversion='", Product.name),
-        "']/software/item"
-      )
-      #Incase that isn't specified use any where distversion is not specified.
-      _FALLBACK_SOFTWARE_XPATH = "/metapackage/group[not(@distversion)]/software/item"
-      softwareNames = YPX.SelectValues(xml, Ops.add(_SOFTWARE_XPATH, "/name"))
-      #If we didn't have any try fallback xpath.
-      if Builtins.size(softwareNames) == 0
-        _SOFTWARE_XPATH = _FALLBACK_SOFTWARE_XPATH
-        softwareNames = YPX.SelectValues(xml, Ops.add(_SOFTWARE_XPATH, "/name"))
-      end
-      Builtins.foreach(softwareNames) do |name|
-        #Construct xpath to query details of this specific software.
-        _THIS_SOFTWARE_XPATH = Ops.add(
-          Ops.add(Ops.add(_SOFTWARE_XPATH, "[name='"), name),
-          "']/"
-        )
-        #Check whether it was recommended.
-        recommended = YPX.SelectValue(
-          xml,
-          Ops.add(_THIS_SOFTWARE_XPATH, "@recommended")
-        )
-        #If recommended not specified we default to true.
-        recommended = "true" if recommended != "false"
-        action = YPX.SelectValue(xml, Ops.add(_THIS_SOFTWARE_XPATH, "@action"))
-        #If action not specified we default to install.
-        action = "install" if action != "remove"
-        type = YPX.SelectValue(xml, Ops.add(_THIS_SOFTWARE_XPATH, "@type"))
-        #If action not specified we default to install.
-        type = "package" if type != "pattern"
-        #Find the summary for this software, preferably in our language.
-        summary = YPX.SelectValue(
-          xml,
-          Ops.add(
-            Ops.add(
-              Ops.add(_THIS_SOFTWARE_XPATH, "summary[@lang='"),
-              Language.language
-            ),
-            "']"
-          )
-        )
-        if summary == ""
-          summary = YPX.SelectValue(
-            xml,
-            Ops.add(_THIS_SOFTWARE_XPATH, "summary[not(@lang)]")
-          )
-        end
-        #Find the description of this software, preferably in our language.
-        description = YPX.SelectValue(
-          xml,
-          Ops.add(
-            Ops.add(
-              Ops.add(_THIS_SOFTWARE_XPATH, "description[@lang='"),
-              Language.language
-            ),
-            "']"
-          )
-        )
-        if description == ""
-          description = YPX.SelectValue(
-            xml,
-            Ops.add(_THIS_SOFTWARE_XPATH, "description[not(@lang)]")
-          )
-        end
-        #Store these software details in our list.
-        softwareDetails = {
-          "summary"     => summary,
-          "description" => description,
-          "action"      => action,
-          "type"        => type,
-          "recommended" => recommended
+      log.info "repositories = #{@repositories}"
+
+      items = xpath_match(group, "software/item")
+
+      items.each do |item|
+        name = xpath_text(item, "name") || ""
+        summary = xpath_text(item, "summary", lang: lang) || ""
+        description = xpath_text(item, "description", lang: lang) || ""
+        recommended = item.attributes["recommended"] != "false"
+        action = item.attributes["action"] != "remove" ? "install" : "remove"
+        type = item.attributes["type"] != "pattern" ? "package" : "pattern"
+
+        @software[name] = {
+          "summary" => summary, "description" => description, "recommended" => recommended.to_s,
+          "action" => action, "type" => type
         }
-        @software = Builtins.add(@software, name, softwareDetails)
       end
+
+      log.info "software = #{@software}"
 
       nil
+    end
+
+    # Parse XML file.
+    #
+    # @param [String] file
+    #
+    # @return [REXML::Document] XML data
+    #
+    def xml_from_file(file)
+      return REXML::Document.new(File.read(file))
+    rescue
+      return REXML::Document.new("")
+    end
+
+    # XPath match.
+    #
+    # @param [REXML::Document,REXML::Element] node
+    # @param [String] path
+    #
+    # @return [Array<REXML::Element>] matching elements
+    #
+    def xpath_match(node, path)
+      REXML::XPath.match(node, path)
+    end
+
+    # First matching element.
+    #
+    # This finds the first matching element. If an attribute is specified as
+    # last argument, it tries to find a match that also matches this
+    # attribute.
+    #
+    # If that finds no match, an element without that attribute is looked
+    # for.
+    #
+    # @example Find summary and prefer German translation
+    #    xpath_element(node, "summary", lang: de_DE)
+    #
+    # @param [REXML::Document,REXML::Element] node
+    # @param [String] path
+    # @param [Array<Hash>] attr
+    #
+    # @return [REXML::Element,nil] matching element or nil
+    #
+    def xpath_element(node, path, *attr)
+      return xpath_match(node, path).first if attr.empty?
+
+      key = attr.first.keys.first
+      val = attr.first[key]
+
+      xpath_match(node, "#{path}[@#{key}='#{val}']").first ||
+      xpath_match(node, "#{path}[not(@#{key})]").first
+    end
+
+    # Text field of first matching element.
+    #
+    # @see #xpath_element for a detailed description.
+    #
+    # @param [REXML::Document,REXML::Element] node
+    # @param [String] path
+    # @param [Array<Hash>] attr
+    #
+    # @return [String,nil] text of first matching element or nil
+    #
+    def xpath_text(node, path, *attr)
+      xpath_element(node, path, *attr)&.text
     end
 
     # <region name="Repositories"> *
