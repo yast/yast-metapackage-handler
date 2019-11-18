@@ -17,6 +17,8 @@ trang oneclick.rnc oneclick.xsd
 
 ### XML Validation
 
+Use one of these commands:
+
 ```sh
 xmllint --noout --relaxng oneclick.rng foo.xml
 jing -c oneclick.rnc foo.xml
