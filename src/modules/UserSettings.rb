@@ -4,6 +4,8 @@ require "yast"
 
 module Yast
   class UserSettingsClass < Module
+    include Yast::Logger
+
     def main
 
       Yast.import "XML"
@@ -36,11 +38,7 @@ module Yast
         @FILENAME
       )
       Builtins.y2debug("Reading UserSettings from %1", @FILENAME)
-      @settings = Convert.convert(
-        XML.XMLToYCPFile(@FILENAME),
-        :from => "map <string, any>",
-        :to   => "map <string, map <string, any>>"
-      )
+      @settings = read_xml_file(@FILENAME)
 
       nil
     end
@@ -104,6 +102,19 @@ module Yast
     publish :function => :GetIntegerValue, :type => "integer (string, string)"
     publish :function => :GetBooleanValue, :type => "boolean (string, string)"
     publish :function => :SetValue, :type => "boolean (string, string, any)"
+
+  private
+
+    # Turns the content of the specified XML file into a hash
+    #
+    # @param path [String] name of the XML file
+    # @return [Hash] empty hash if the file does not exists or cannot be processed
+    def read_xml_file(path)
+      XML.XMLToYCPFile(path)
+    rescue RuntimeError => e
+      log.debug "Using empty hash for #{path}: #{e.inspect}"
+      {}
+    end
   end
 
   UserSettings = UserSettingsClass.new
