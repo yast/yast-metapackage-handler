@@ -1,0 +1,29 @@
+<metapackage xmlns:os="http://opensuse.org/Standards/One_Click_Install" xmlns="http://opensuse.org/Standards/One_Click_Install">
+  <group distversion="openSUSE Tumbleweed">
+    <repositories>
+      <repository recommended="true">
+        <name>openSUSE:Factory</name>
+        <summary>The next openSUSE distribution</summary>
+        <description>Any user who wishes to have the newest packages that include, but are not limited to, the Linux kernel, SAMBA, git, desktops, office applications and many other packages, will want Tumbleweed. Tumbleweed appeals to Power Users, Software Developers and openSUSE Contributors. If you require the latest software stacks and Integrated Development Environment or need a stable platform closest to bleeding edge Linux, Tumbleweed is the best choice for you.
+
+Staging dashboard is located at: https://build.opensuse.org/project/show/openSUSE:Factory
+
+List of known devel projects: https://build.opensuse.org/package/view_file/openSUSE:Factory:Staging/dashboard/devel_projects
+
+Have a look at http://en.opensuse.org/Portal:Factory for more details.</description>
+        <url>http://download.opensuse.org/tumbleweed/repo/oss/</url>
+      </repository>
+    </repositories>
+    <software>
+      <item>
+        <name>vim</name>
+        <summary>Vi IMproved</summary>
+        <description>Vim (Vi IMproved) is an almost compatible version of the UNIX editor
+vi. Almost every possible command can be performed using only ASCII
+characters. Only the 'Q' command is missing (you do not need it). Many
+new features have been added: multilevel undo, command line history,
+file name completion, block operations, and editing of binary data.</description>
+      </item>
+    </software>
+  </group>
+</metapackage>
