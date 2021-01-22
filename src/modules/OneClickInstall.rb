@@ -348,7 +348,7 @@ module Yast
     end
 
     # Ensures the software with the specified name is selected for installation or removal.
-    # @param the name of the software to ensure is selected for installation.
+    # @param name [String] the name of the software to ensure is selected for installation.
     #
     def SetRequiredSoftware(name)
       softwareDetails = Ops.get(@software, name)
@@ -386,7 +386,7 @@ module Yast
     end
 
     # Ensures the software with the specified name is NOT selected for installation or removal.
-    # @param the name of the software to ensure is NOT selected for installation.
+    # @param name [String] the name of the software to ensure is NOT selected for installation.
     #
     def SetNonRequiredSoftware(name)
       softwareDetails = Ops.get(@software, name)
@@ -399,7 +399,7 @@ module Yast
 
     # Ensures that the repositories with specified URLs are selected for addition, and all others are not.
     # Invalid pluralisation due to lack of proper overloading :(
-    # @param the names of the software to ensure is selected for installation.
+    # @param names [Array<String>] the names of the software to ensure is selected for installation.
     #
     def SetRequiredSoftwares(names)
       names = deep_copy(names)
@@ -437,7 +437,7 @@ module Yast
     # <region name="Processing"> *
 
     # Specify whether the user should remain subscribed to the repositories after installation of this software is complete.
-    # @param the boolean value indicating whether the user should remain subscribed.
+    # @param value [Boolean] indicating whether the user should remain subscribed.
     #
     def SetRemainSubscribed(value)
       @remainSubscribed = value

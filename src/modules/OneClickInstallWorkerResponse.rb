@@ -28,7 +28,8 @@ module Yast
     def GetSuccess
       @success == "true"
     end
-    # @param the success status to set.
+
+    # @param value [Boolean] the success status to set.
     #
     def SetSuccess(value)
       if value
