@@ -65,4 +65,37 @@ describe Yast::OneClickInstallWorkerFunctions do
       end
     end
   end
+
+  describe '#AddRepositories' do
+    before do
+      allow(subject).to receive(:DeDupe).and_return(urls)
+    end
+    context "when metadata can be downloaded for all repositories" do
+      before do
+        allow(Yast::Pkg).to receive(:SourceRefreshNow).and_return(true)
+      end
+      it "successfully adds the repositories" do
+        expect(subject.AddRepositories(urls)).to be true
+      end
+    end
+
+    context "when metadata can NOT be downloaded" do
+      context "for all repositories" do
+        before do
+          allow(Yast::Pkg).to receive(:SourceRefreshNow).and_return(false)
+        end
+        it "does NOT add all the repositories" do
+          expect(subject.AddRepositories(urls)).to be false
+        end
+      end
+      context "for at least one repository" do
+        before do
+          allow(Yast::Pkg).to receive(:SourceRefreshNow).and_return(false, true, true)
+        end
+        it "does NOT add all the repositories" do
+          expect(subject.AddRepositories(urls)).to be false
+        end
+      end
+    end
+  end
 end
