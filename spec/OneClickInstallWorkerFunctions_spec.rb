@@ -98,4 +98,23 @@ describe Yast::OneClickInstallWorkerFunctions do
       end
     end
   end
+
+  describe '#RemoveAddedRepositories' do
+    context "when metadata cached on disk is removed" do
+      before do
+        allow(Yast::Pkg).to receive(:SourceDelete).and_return(true)
+      end
+      it "removes added repositories" do
+        expect(subject.RemoveAddedRepositories).to be true
+      end
+    end
+    context "when metadata cached on disk is NOT removed" do
+      before do
+        allow(Yast::Pkg).to receive(:SourceDelete).and_return(false)
+      end
+      it "does not remove added repositories" do
+        expect(subject.RemoveAddedRepositories).to be false
+      end
+    end
+  end
 end
