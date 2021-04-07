@@ -1,7 +1,7 @@
 #
 # spec file for package yast2-metapackage-handler
 #
-# Copyright (c) 2015 SUSE LINUX GmbH, Nuernberg, Germany.
+# Copyright (c) 2021 SUSE LLC
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -17,38 +17,34 @@
 
 
 Name:           yast2-metapackage-handler
-Version:        4.3.0
+Version:        4.4.0
 Release:        0
 Summary:        YaST2 - Easy Installation of Add-on RPMs using Metapackages
 License:        GPL-2.0-or-later
 Group:          System/YaST
-Url:            https://github.com/yast/yast-metapackage-handler
-
+URL:            https://github.com/yast/yast-metapackage-handler
 Source0:        %{name}-%{version}.tar.bz2
-
 # should be required by devtools
 BuildRequires:  pkgconfig
-# y2tool
-BuildRequires:  yast2-devtools >= 3.1.10
-# ycpc
-BuildRequires:  yast2-core
-BuildRequires:  yast2
-BuildRequires:  yast2-country-data
-BuildRequires:  yast2-packager
-BuildRequires:  yast2-transfer
 # desktop files
 BuildRequires:  update-desktop-files
-BuildRequires:  rubygem(%rb_default_ruby_abi:yast-rake)
-
+BuildRequires:  yast2
+# ycpc
+BuildRequires:  yast2-core
+BuildRequires:  yast2-country-data
+# y2tool
+BuildRequires:  yast2-devtools >= 3.1.10
+BuildRequires:  yast2-packager
+BuildRequires:  yast2-transfer
+BuildRequires:  rubygem(%{rb_default_ruby_abi}:yast-rake)
+# needed at runtime for invoking root mode
+Requires:       %{_bindir}/xdg-su
 Requires:       yast2
-Requires:       yast2-packager
-Requires:       yast2-transfer
 # Language
 Requires:       yast2-country-data
-# needed at runtime for invoking root mode
-Requires:       /usr/bin/xdg-su
+Requires:       yast2-packager
 Requires:       yast2-ruby-bindings >= 1.0.0
-
+Requires:       yast2-transfer
 BuildArch:      noarch
 
 %description
@@ -68,7 +64,7 @@ with a simple click on a link in a website.
 %files
 %doc %{yast_docdir}
 %license COPYING
-%{_bindir}/
+%{_bindir}/OneClickInstall*
 %{yast_clientdir}
 %{yast_moduledir}
 %{yast_icondir}
