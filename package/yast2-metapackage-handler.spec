@@ -17,7 +17,7 @@
 
 
 Name:           yast2-metapackage-handler
-Version:        4.4.0
+Version:        4.4.1
 Release:        0
 Summary:        YaST2 - Easy Installation of Add-on RPMs using Metapackages
 License:        GPL-2.0-or-later
@@ -68,7 +68,7 @@ with a simple click on a link in a website.
 %{yast_clientdir}
 %{yast_moduledir}
 %{yast_icondir}
-%{_datadir}/mime/packages/
-%{_datadir}/applications/
+%{_datadir}/mime/packages/*
+%{_datadir}/applications/*
 
 %changelog
