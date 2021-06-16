@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE OneClickInstall SYSTEM "/un/defined">
+<OneClickInstall xmlns="http://www.suse.com/1.0/yast2ns" xmlns:config="http://www.suse.com/1.0/configns">
+  <description/>
+  <name/>
+  <remainSubscribed t="boolean">true</remainSubscribed>
+  <repositories t="list">
+    <repository t="map">
+      <key>http://download.opensuse.org/tumbleweed/repo/non-oss/</key>
+      <name>non-oss</name>
+      <recommended>false</recommended>
+    </repository>
+    <repository t="map">
+      <key>http://download.opensuse.org/tumbleweed/repo/oss/</key>
+      <name>oss</name>
+      <recommended>true</recommended>
+    </repository>
+  </repositories>
+  <software t="list">
+    <listentry t="map">
+      <action>remove</action>
+      <key>sap_server</key>
+      <recommended>true</recommended>
+      <type>pattern</type>
+    </listentry>
+    <listentry t="map">
+      <action>install</action>
+      <key>tftp</key>
+      <recommended>false</recommended>
+      <type>package</type>
+    </listentry>
+    <listentry t="map">
+      <action>install</action>
+      <key>vim</key>
+      <recommended>true</recommended>
+      <type>package</type>
+    </listentry>
+    <listentry t="map">
+      <action>install</action>
+      <key>x11</key>
+      <recommended>true</recommended>
+      <type>pattern</type>
+    </listentry>
+  </software>
+  <summary/>
+</OneClickInstall>

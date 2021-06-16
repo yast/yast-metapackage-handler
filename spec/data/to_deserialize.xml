@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE OneClickInstall SYSTEM "/un/defined">
+<OneClickInstall xmlns="http://www.suse.com/1.0/yast2ns" xmlns:config="http://www.suse.com/1.0/configns">
+  <description/>
+  <name/>
+  <remainSubscribed t="boolean">true</remainSubscribed>
+  <repositories t="list">
+    <repository t="map">
+      <key>https://ftp.gwdg.de/pub/linux/misc/packman/suse/openSUSE_Tumbleweed/</key>
+      <name>packman</name>
+      <recommended>false</recommended>
+    </repository>
+  </repositories>  
+  <software t="list">
+    <listentry t="map">
+      <action>install</action>
+      <key>zdoom</key>
+      <recommended>false</recommended>
+      <type>package</type>
+    </listentry>
+  </software>
+  <summary/>
+</OneClickInstall>

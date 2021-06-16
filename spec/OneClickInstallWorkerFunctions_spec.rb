@@ -117,4 +117,80 @@ describe Yast::OneClickInstallWorkerFunctions do
       end
     end
   end
+
+  describe '#InstallPackages' do
+    before do
+      allow(Yast::Pkg).to receive(:ResolvableInstallRepo).and_return(true)
+    end
+    context "when package depedencies are resolved" do
+      before do
+        allow(Yast::Pkg).to receive(:PkgSolve).and_return(true)
+      end
+      it "installs packages" do
+        expect(subject.InstallPackages("vim")).to be true
+      end
+    end
+    context "when package depedencies are not resolved" do
+      before do
+        allow(Yast::Pkg).to receive(:PkgSolve).and_return(false)
+      end
+      it "installs packages if package selection is accepted" do
+        allow(Yast::PackagesUI).to receive(:RunPackageSelector).and_return(:accept)
+        expect(subject.InstallPackages("vim")).to be true
+      end
+      it "does not install packages if package selection is not accepted" do
+        allow(Yast::PackagesUI).to receive(:RunPackageSelector).and_return(:cancel)
+        expect(subject.InstallPackages("vim")).to be false
+      end
+    end
+  end
+
+  describe '#InstallPatterns' do
+    context "when pattern depedencies are resolved" do
+      before do
+        allow(Yast::Pkg).to receive(:PkgSolve).and_return(true)
+      end
+      it "installs pattern" do
+        expect(subject.InstallPatterns("gnome")).to be true
+      end
+    end
+    context "when pattern depedencies are not resolved" do
+      before do
+        allow(Yast::Pkg).to receive(:PkgSolve).and_return(false)
+      end
+      it "installs pattern if package selection is accepted" do
+        allow(Yast::PackagesUI).to receive(:RunPackageSelector).and_return(:accept)
+        expect(subject.InstallPatterns("gnome")).to be true
+      end
+      it "does not install pattern if package selection is not accepted" do
+        allow(Yast::PackagesUI).to receive(:RunPackageSelector).and_return(:cancel)
+        expect(subject.InstallPatterns("gnome")).to be false
+      end
+    end
+  end
+
+  describe '#RemovePackages' do
+    context "when package depedensies are resolved" do
+      before do
+        allow(Yast::Pkg).to receive(:PkgSolve).and_return(true)
+      end
+      it "removes installed package" do
+        expect(subject.RemovePackages("vim")).to be true
+      end
+    end
+    context "when package depedencies are not resolved" do
+      before do
+        allow(Yast::Pkg).to receive(:PkgSolve).and_return(false)
+      end
+      it "removes installed packages if package selection is accepted" do
+        allow(Yast::PackagesUI).to receive(:RunPackageSelector).and_return(:accept)
+        expect(subject.RemovePackages("vim")).to be true 
+      end
+      it "does not remove installed packages if package selection is not accepted" do
+        allow(Yast::PackagesUI).to receive(:RunPackageSelector).and_return(:cancel)
+        expect(subject.RemovePackages("vim")).to be false 
+      end
+    end
+  end
+
 end
