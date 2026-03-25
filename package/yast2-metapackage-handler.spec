@@ -17,7 +17,7 @@
 
 
 Name:           yast2-metapackage-handler
-Version:        5.0.0
+Version:        5.0.1
 Release:        0
 Summary:        YaST2 - Easy Installation of Add-on RPMs using Metapackages
 License:        GPL-2.0-or-later
@@ -27,7 +27,6 @@ Source0:        %{name}-%{version}.tar.bz2
 # should be required by devtools
 BuildRequires:  pkgconfig
 # desktop files
-BuildRequires:  update-desktop-files
 BuildRequires:  yast2
 # ycpc
 BuildRequires:  yast2-core
